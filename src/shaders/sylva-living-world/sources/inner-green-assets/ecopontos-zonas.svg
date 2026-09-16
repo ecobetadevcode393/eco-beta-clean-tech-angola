@@ -1,0 +1,577 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="1920" height="1080">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#f4f7f4"/>
+    </linearGradient>
+
+    <linearGradient id="roadGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#475569"/>
+      <stop offset="100%" stop-color="#334155"/>
+    </linearGradient>
+
+    <linearGradient id="roofGrad1" x1="0" y1="0" x2="1" y2="0.8">
+      <stop offset="0%" stop-color="#e07a5f"/>
+      <stop offset="100%" stop-color="#c45a3f"/>
+    </linearGradient>
+
+    <linearGradient id="facadeGrad" x1="0" y1="0" x2="0.5" y2="1">
+      <stop offset="0%" stop-color="#fdf0d5"/>
+      <stop offset="100%" stop-color="#e9d8a6"/>
+    </linearGradient>
+
+    <linearGradient id="facadeShadow" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#d4c391"/>
+      <stop offset="100%" stop-color="#bba874"/>
+    </linearGradient>
+
+    <linearGradient id="courtGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#2a9d8f"/>
+      <stop offset="100%" stop-color="#264653"/>
+    </linearGradient>
+
+    <linearGradient id="grassGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#a7c957"/>
+      <stop offset="100%" stop-color="#6a994e"/>
+    </linearGradient>
+
+    <filter id="dropShadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#000000" flood-opacity="0.18"/>
+    </filter>
+
+    <filter id="softGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#0a8738" flood-opacity="0.3"/>
+    </filter>
+
+    <!-- Clip for Map Viewport -->
+    <clipPath id="mapClip">
+      <rect x="110" y="340" width="1340" height="650" rx="16"/>
+    </clipPath>
+  </defs>
+
+  <!-- Canvas Background -->
+  <rect width="1920" height="1080" fill="url(#bgGrad)"/>
+
+  <!-- Subtle Blueprint / Grid Texture in the background -->
+  <g opacity="0.04" stroke="#0a8738" stroke-width="1">
+    <line x1="0" y1="0" x2="0" y2="1080"/><line x1="50" y1="0" x2="50" y2="1080"/><line x1="100" y1="0" x2="100" y2="1080"/><line x1="150" y1="0" x2="150" y2="1080"/><line x1="200" y1="0" x2="200" y2="1080"/><line x1="250" y1="0" x2="250" y2="1080"/><line x1="300" y1="0" x2="300" y2="1080"/><line x1="350" y1="0" x2="350" y2="1080"/><line x1="400" y1="0" x2="400" y2="1080"/><line x1="450" y1="0" x2="450" y2="1080"/><line x1="500" y1="0" x2="500" y2="1080"/><line x1="550" y1="0" x2="550" y2="1080"/><line x1="600" y1="0" x2="600" y2="1080"/><line x1="650" y1="0" x2="650" y2="1080"/><line x1="700" y1="0" x2="700" y2="1080"/><line x1="750" y1="0" x2="750" y2="1080"/><line x1="800" y1="0" x2="800" y2="1080"/><line x1="850" y1="0" x2="850" y2="1080"/><line x1="900" y1="0" x2="900" y2="1080"/><line x1="950" y1="0" x2="950" y2="1080"/><line x1="1000" y1="0" x2="1000" y2="1080"/><line x1="1050" y1="0" x2="1050" y2="1080"/><line x1="1100" y1="0" x2="1100" y2="1080"/><line x1="1150" y1="0" x2="1150" y2="1080"/><line x1="1200" y1="0" x2="1200" y2="1080"/><line x1="1250" y1="0" x2="1250" y2="1080"/><line x1="1300" y1="0" x2="1300" y2="1080"/><line x1="1350" y1="0" x2="1350" y2="1080"/><line x1="1400" y1="0" x2="1400" y2="1080"/><line x1="1450" y1="0" x2="1450" y2="1080"/><line x1="1500" y1="0" x2="1500" y2="1080"/><line x1="1550" y1="0" x2="1550" y2="1080"/><line x1="1600" y1="0" x2="1600" y2="1080"/><line x1="1650" y1="0" x2="1650" y2="1080"/><line x1="1700" y1="0" x2="1700" y2="1080"/><line x1="1750" y1="0" x2="1750" y2="1080"/><line x1="1800" y1="0" x2="1800" y2="1080"/><line x1="1850" y1="0" x2="1850" y2="1080"/>
+    <line x1="0" y1="0" x2="1920" y2="0"/><line x1="0" y1="50" x2="1920" y2="50"/><line x1="0" y1="100" x2="1920" y2="100"/><line x1="0" y1="150" x2="1920" y2="150"/><line x1="0" y1="200" x2="1920" y2="200"/><line x1="0" y1="250" x2="1920" y2="250"/><line x1="0" y1="300" x2="1920" y2="300"/><line x1="0" y1="350" x2="1920" y2="350"/><line x1="0" y1="400" x2="1920" y2="400"/><line x1="0" y1="450" x2="1920" y2="450"/><line x1="0" y1="500" x2="1920" y2="500"/><line x1="0" y1="550" x2="1920" y2="550"/><line x1="0" y1="600" x2="1920" y2="600"/><line x1="0" y1="650" x2="1920" y2="650"/><line x1="0" y1="700" x2="1920" y2="700"/><line x1="0" y1="750" x2="1920" y2="750"/><line x1="0" y1="800" x2="1920" y2="800"/><line x1="0" y1="850" x2="1920" y2="850"/><line x1="0" y1="900" x2="1920" y2="900"/><line x1="0" y1="950" x2="1920" y2="950"/><line x1="0" y1="1000" x2="1920" y2="1000"/><line x1="0" y1="1050" x2="1920" y2="1050"/>
+  </g>
+
+  <!-- ==================== ISOMETRIC 3D MAP SECTION ==================== -->
+  <g id="map-container" filter="url(#dropShadow)">
+    <!-- Map Outer Border & Frame -->
+    <rect x="106" y="336" width="1348" height="658" rx="20" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+    <rect x="110" y="340" width="1340" height="650" rx="16" fill="#e2e8f0"/>
+
+    <g clip-path="url(#mapClip)">
+      <!-- Map Background Ground Base -->
+      <rect x="80" y="300" width="1400" height="720" fill="#cbd5e1"/>
+
+      <!-- Diagonal Road Network (Luanda Streets & Avenues) -->
+      <!-- Main Avenue Left (Angled) -->
+      <polygon points="100,880 420,330 520,330 180,950 100,950" fill="url(#roadGrad)"/>
+      <!-- Cross Streets -->
+      <polygon points="360,540 1460,780 1460,840 330,600" fill="url(#roadGrad)"/>
+      <polygon points="180,820 1460,980 1460,1020 150,870" fill="url(#roadGrad)"/>
+      <polygon points="680,330 1460,550 1460,590 620,330" fill="url(#roadGrad)"/>
+
+      <!-- Roundabout / Traffic Circle on the Avenue -->
+      <g transform="translate(340, 660)">
+        <ellipse cx="0" cy="0" rx="75" ry="48" fill="url(#roadGrad)"/>
+        <!-- Inner Island -->
+        <ellipse cx="0" cy="0" rx="46" ry="30" fill="url(#grassGrad)"/>
+        <!-- Roundabout Center Monument/Pillar -->
+        <polygon points="-8,-4 8,-4 6,-35 -6,-35" fill="#e2e8f0"/>
+        <polygon points="6,-4 14,-1 12,-32 6,-35" fill="#94a3b8"/>
+        <!-- Road Marking Ring -->
+        <ellipse cx="0" cy="0" rx="60" ry="38" fill="none" stroke="#ffffff" stroke-width="2" stroke-dasharray="6,8" opacity="0.8"/>
+      </g>
+
+      <!-- Road Markings (White dashed lines) -->
+      <line x1="280" y1="560" x2="470" y2="330" stroke="#ffffff" stroke-width="3" stroke-dasharray="12,12" opacity="0.85"/>
+      <line x1="140" y1="920" x2="300" y2="720" stroke="#ffffff" stroke-width="3" stroke-dasharray="12,12" opacity="0.85"/>
+      <line x1="420" y1="580" x2="1420" y2="800" stroke="#ffffff" stroke-width="2.5" stroke-dasharray="10,12" opacity="0.75"/>
+      <line x1="720" y1="360" x2="1420" y2="570" stroke="#ffffff" stroke-width="2.5" stroke-dasharray="10,12" opacity="0.75"/>
+
+      <!-- Residential Urban Blocks & Buildings (Surrounding) -->
+      <!-- Top Right Blocks -->
+      <g transform="translate(850, 360)">
+        <!-- Block 1 -->
+        <polygon points="0,40 60,10 120,40 60,70" fill="#f8fafc"/>
+        <polygon points="0,40 60,70 60,130 0,100" fill="#e2e8f0"/>
+        <polygon points="60,70 120,40 120,100 60,130" fill="#cbd5e1"/>
+        <!-- Block 2 -->
+        <polygon points="140,70 200,40 260,70 200,100" fill="#f8fafc"/>
+        <polygon points="140,70 200,100 200,160 140,130" fill="#e2e8f0"/>
+        <polygon points="200,100 260,70 260,130 200,160" fill="#cbd5e1"/>
+      </g>
+
+      <g transform="translate(1080, 420)">
+        <!-- Residential Tower -->
+        <polygon points="0,50 80,10 160,50 80,90" fill="#f1f5f9"/>
+        <polygon points="0,50 80,90 80,190 0,150" fill="#cbd5e1"/>
+        <polygon points="80,90 160,50 160,150 80,190" fill="#94a3b8"/>
+        <!-- Windows Grid -->
+        <g fill="#475569" opacity="0.6">
+          <rect x="15" y="105" width="10" height="15" transform="skewY(24)"/>
+          <rect x="35" y="115" width="10" height="15" transform="skewY(24)"/>
+          <rect x="55" y="125" width="10" height="15" transform="skewY(24)"/>
+          <rect x="15" y="135" width="10" height="15" transform="skewY(24)"/>
+          <rect x="35" y="145" width="10" height="15" transform="skewY(24)"/>
+          <rect x="55" y="155" width="10" height="15" transform="skewY(24)"/>
+        </g>
+      </g>
+
+      <!-- Bottom Residential Blocks (Target of "RESIDENCIAL") -->
+      <g id="residential-zone" transform="translate(1180, 710)">
+        <!-- Cluster of Apartment Buildings -->
+        <polygon points="-40,40 40,0 120,40 40,80" fill="#f8fafc"/>
+        <polygon points="-40,40 40,80 40,170 -40,130" fill="#e2e8f0"/>
+        <polygon points="40,80 120,40 120,130 40,170" fill="#94a3b8"/>
+
+        <!-- Second building -->
+        <polygon points="80,70 150,35 220,70 150,105" fill="#f1f5f9"/>
+        <polygon points="80,70 150,105 150,185 80,150" fill="#cbd5e1"/>
+        <polygon points="150,105 220,70 220,150 150,185" fill="#94a3b8"/>
+
+        <!-- Third building -->
+        <polygon points="10,130 80,95 150,130 80,165" fill="#e2e8f0"/>
+        <polygon points="10,130 80,165 80,230 10,195" fill="#94a3b8"/>
+        <polygon points="80,165 150,130 150,195 80,230" fill="#64748b"/>
+      </g>
+
+      <!-- Cars on roads -->
+      <!-- Red car -->
+      <g transform="translate(230, 890)">
+        <polygon points="0,0 20,-8 35,0 15,8" fill="#ef4444"/>
+        <polygon points="0,0 15,8 15,14 0,6" fill="#b91c1c"/>
+      </g>
+      <!-- White car -->
+      <g transform="translate(780, 630)">
+        <polygon points="0,0 24,6 36,0 12,-6" fill="#ffffff"/>
+        <polygon points="0,0 24,6 24,10 0,4" fill="#cbd5e1"/>
+      </g>
+      <!-- Blue car -->
+      <g transform="translate(1040, 680)">
+        <polygon points="0,0 24,6 36,0 12,-6" fill="#3b82f6"/>
+        <polygon points="0,0 24,6 24,10 0,4" fill="#1d4ed8"/>
+      </g>
+
+      <!-- Surrounding Trees (Isometric green spheres) -->
+      
+        <g transform="translate(280, 600)">
+          <ellipse cx="0" cy="4" rx="10" ry="6" fill="#000000" opacity="0.2"/>
+          <ellipse cx="0" cy="0" rx="11" ry="11" fill="url(#grassGrad)"/>
+          <ellipse cx="-3" cy="-3" rx="5" ry="5" fill="#d9ed92" opacity="0.6"/>
+        </g>
+      
+        <g transform="translate(310, 580)">
+          <ellipse cx="0" cy="4" rx="10" ry="6" fill="#000000" opacity="0.2"/>
+          <ellipse cx="0" cy="0" rx="11" ry="11" fill="url(#grassGrad)"/>
+          <ellipse cx="-3" cy="-3" rx="5" ry="5" fill="#d9ed92" opacity="0.6"/>
+        </g>
+      
+        <g transform="translate(330, 730)">
+          <ellipse cx="0" cy="4" rx="10" ry="6" fill="#000000" opacity="0.2"/>
+          <ellipse cx="0" cy="0" rx="11" ry="11" fill="url(#grassGrad)"/>
+          <ellipse cx="-3" cy="-3" rx="5" ry="5" fill="#d9ed92" opacity="0.6"/>
+        </g>
+      
+        <g transform="translate(360, 750)">
+          <ellipse cx="0" cy="4" rx="10" ry="6" fill="#000000" opacity="0.2"/>
+          <ellipse cx="0" cy="0" rx="11" ry="11" fill="url(#grassGrad)"/>
+          <ellipse cx="-3" cy="-3" rx="5" ry="5" fill="#d9ed92" opacity="0.6"/>
+        </g>
+      
+        <g transform="translate(420, 810)">
+          <ellipse cx="0" cy="4" rx="10" ry="6" fill="#000000" opacity="0.2"/>
+          <ellipse cx="0" cy="0" rx="11" ry="11" fill="url(#grassGrad)"/>
+          <ellipse cx="-3" cy="-3" rx="5" ry="5" fill="#d9ed92" opacity="0.6"/>
+        </g>
+      
+        <g transform="translate(460, 840)">
+          <ellipse cx="0" cy="4" rx="10" ry="6" fill="#000000" opacity="0.2"/>
+          <ellipse cx="0" cy="0" rx="11" ry="11" fill="url(#grassGrad)"/>
+          <ellipse cx="-3" cy="-3" rx="5" ry="5" fill="#d9ed92" opacity="0.6"/>
+        </g>
+      
+        <g transform="translate(530, 860)">
+          <ellipse cx="0" cy="4" rx="10" ry="6" fill="#000000" opacity="0.2"/>
+          <ellipse cx="0" cy="0" rx="11" ry="11" fill="url(#grassGrad)"/>
+          <ellipse cx="-3" cy="-3" rx="5" ry="5" fill="#d9ed92" opacity="0.6"/>
+        </g>
+      
+        <g transform="translate(570, 840)">
+          <ellipse cx="0" cy="4" rx="10" ry="6" fill="#000000" opacity="0.2"/>
+          <ellipse cx="0" cy="0" rx="11" ry="11" fill="url(#grassGrad)"/>
+          <ellipse cx="-3" cy="-3" rx="5" ry="5" fill="#d9ed92" opacity="0.6"/>
+        </g>
+      
+        <g transform="translate(620, 830)">
+          <ellipse cx="0" cy="4" rx="10" ry="6" fill="#000000" opacity="0.2"/>
+          <ellipse cx="0" cy="0" rx="11" ry="11" fill="url(#grassGrad)"/>
+          <ellipse cx="-3" cy="-3" rx="5" ry="5" fill="#d9ed92" opacity="0.6"/>
+        </g>
+      
+        <g transform="translate(670, 810)">
+          <ellipse cx="0" cy="4" rx="10" ry="6" fill="#000000" opacity="0.2"/>
+          <ellipse cx="0" cy="0" rx="11" ry="11" fill="url(#grassGrad)"/>
+          <ellipse cx="-3" cy="-3" rx="5" ry="5" fill="#d9ed92" opacity="0.6"/>
+        </g>
+      
+        <g transform="translate(720, 780)">
+          <ellipse cx="0" cy="4" rx="10" ry="6" fill="#000000" opacity="0.2"/>
+          <ellipse cx="0" cy="0" rx="11" ry="11" fill="url(#grassGrad)"/>
+          <ellipse cx="-3" cy="-3" rx="5" ry="5" fill="#d9ed92" opacity="0.6"/>
+        </g>
+      
+        <g transform="translate(770, 760)">
+          <ellipse cx="0" cy="4" rx="10" ry="6" fill="#000000" opacity="0.2"/>
+          <ellipse cx="0" cy="0" rx="11" ry="11" fill="url(#grassGrad)"/>
+          <ellipse cx="-3" cy="-3" rx="5" ry="5" fill="#d9ed92" opacity="0.6"/>
+        </g>
+      
+        <g transform="translate(830, 740)">
+          <ellipse cx="0" cy="4" rx="10" ry="6" fill="#000000" opacity="0.2"/>
+          <ellipse cx="0" cy="0" rx="11" ry="11" fill="url(#grassGrad)"/>
+          <ellipse cx="-3" cy="-3" rx="5" ry="5" fill="#d9ed92" opacity="0.6"/>
+        </g>
+      
+        <g transform="translate(880, 710)">
+          <ellipse cx="0" cy="4" rx="10" ry="6" fill="#000000" opacity="0.2"/>
+          <ellipse cx="0" cy="0" rx="11" ry="11" fill="url(#grassGrad)"/>
+          <ellipse cx="-3" cy="-3" rx="5" ry="5" fill="#d9ed92" opacity="0.6"/>
+        </g>
+      
+        <g transform="translate(930, 680)">
+          <ellipse cx="0" cy="4" rx="10" ry="6" fill="#000000" opacity="0.2"/>
+          <ellipse cx="0" cy="0" rx="11" ry="11" fill="url(#grassGrad)"/>
+          <ellipse cx="-3" cy="-3" rx="5" ry="5" fill="#d9ed92" opacity="0.6"/>
+        </g>
+      
+        <g transform="translate(980, 650)">
+          <ellipse cx="0" cy="4" rx="10" ry="6" fill="#000000" opacity="0.2"/>
+          <ellipse cx="0" cy="0" rx="11" ry="11" fill="url(#grassGrad)"/>
+          <ellipse cx="-3" cy="-3" rx="5" ry="5" fill="#d9ed92" opacity="0.6"/>
+        </g>
+      
+        <g transform="translate(1030, 620)">
+          <ellipse cx="0" cy="4" rx="10" ry="6" fill="#000000" opacity="0.2"/>
+          <ellipse cx="0" cy="0" rx="11" ry="11" fill="url(#grassGrad)"/>
+          <ellipse cx="-3" cy="-3" rx="5" ry="5" fill="#d9ed92" opacity="0.6"/>
+        </g>
+      
+        <g transform="translate(1080, 590)">
+          <ellipse cx="0" cy="4" rx="10" ry="6" fill="#000000" opacity="0.2"/>
+          <ellipse cx="0" cy="0" rx="11" ry="11" fill="url(#grassGrad)"/>
+          <ellipse cx="-3" cy="-3" rx="5" ry="5" fill="#d9ed92" opacity="0.6"/>
+        </g>
+      
+        <g transform="translate(1130, 560)">
+          <ellipse cx="0" cy="4" rx="10" ry="6" fill="#000000" opacity="0.2"/>
+          <ellipse cx="0" cy="0" rx="11" ry="11" fill="url(#grassGrad)"/>
+          <ellipse cx="-3" cy="-3" rx="5" ry="5" fill="#d9ed92" opacity="0.6"/>
+        </g>
+      
+        <g transform="translate(1180, 530)">
+          <ellipse cx="0" cy="4" rx="10" ry="6" fill="#000000" opacity="0.2"/>
+          <ellipse cx="0" cy="0" rx="11" ry="11" fill="url(#grassGrad)"/>
+          <ellipse cx="-3" cy="-3" rx="5" ry="5" fill="#d9ed92" opacity="0.6"/>
+        </g>
+      
+
+      <!-- ==================== CENTRAL IPIL CAMPUS ==================== -->
+      <g id="ipil-campus" transform="translate(420, 510)">
+        <!-- Perimeter Campus Ground / Green Lawn -->
+        <polygon points="0,150 280,0 600,160 320,310" fill="url(#grassGrad)"/>
+
+        <!-- Concrete Sidewalk / Yard -->
+        <polygon points="40,160 270,30 540,170 310,300" fill="#f1f5f9"/>
+
+        <!-- Sports Court (Futsal/Basketball) - Green Court behind IPIL -->
+        <g transform="translate(410, 110)">
+          <polygon points="0,45 80,0 160,45 80,90" fill="url(#courtGrad)"/>
+          <polygon points="8,45 80,5 152,45 80,85" fill="none" stroke="#ffffff" stroke-width="2" opacity="0.9"/>
+          <!-- Court Center Line -->
+          <line x1="44" y1="25" x2="116" y2="65" stroke="#ffffff" stroke-width="2" opacity="0.9"/>
+          <!-- Court Center Circle -->
+          <ellipse cx="80" cy="45" rx="16" ry="9" fill="none" stroke="#ffffff" stroke-width="2" opacity="0.9"/>
+        </g>
+
+        <!-- Main IPIL Building -->
+        <g transform="translate(80, 60)">
+          <!-- Ground Shadow -->
+          <polygon points="0,140 180,40 380,150 200,250" fill="#000000" opacity="0.25"/>
+
+          <!-- Front Facade (Colonnade / Pillars) -->
+          <polygon points="0,100 160,190 160,250 0,160" fill="url(#facadeGrad)"/>
+          <!-- Right Facade -->
+          <polygon points="160,190 320,100 320,160 160,250" fill="url(#facadeShadow)"/>
+
+          <!-- Columns on front facade -->
+          
+            <line x1="15" y1="108.4" x2="15" y2="168.4" stroke="#d4a373" stroke-width="4"/>
+          
+            <line x1="35" y1="119.6" x2="35" y2="179.6" stroke="#d4a373" stroke-width="4"/>
+          
+            <line x1="55" y1="130.8" x2="55" y2="190.8" stroke="#d4a373" stroke-width="4"/>
+          
+            <line x1="75" y1="142" x2="75" y2="202" stroke="#d4a373" stroke-width="4"/>
+          
+            <line x1="95" y1="153.2" x2="95" y2="213.2" stroke="#d4a373" stroke-width="4"/>
+          
+            <line x1="115" y1="164.4" x2="115" y2="224.4" stroke="#d4a373" stroke-width="4"/>
+          
+            <line x1="135" y1="175.60000000000002" x2="135" y2="235.60000000000002" stroke="#d4a373" stroke-width="4"/>
+          
+
+          <!-- Entrance Steps -->
+          <polygon points="50,190 110,225 110,235 50,200" fill="#e2e8f0"/>
+
+          <!-- Terracotta Pitched Roof -->
+          <polygon points="-10,95 80,40 250,135 160,190" fill="url(#roofGrad1)"/>
+          <polygon points="80,40 240,-10 410,85 250,135" fill="#b9472e"/>
+          <polygon points="250,135 410,85 320,100 160,190" fill="#a13d27"/>
+
+          <!-- Central Clock / Frontispiece Triangle -->
+          <polygon points="60,130 90,110 120,145" fill="#fefae0"/>
+          <polygon points="60,130 90,110 90,100 60,120" fill="#ccd5ae"/>
+          <circle cx="90" cy="125" r="5" fill="#283618"/>
+
+          <!-- Palm Trees around IPIL perimeter -->
+          
+            <g transform="translate(20, 160)">
+              <ellipse cx="0" cy="5" rx="8" ry="4" fill="#000000" opacity="0.25"/>
+              <line x1="0" y1="5" x2="0" y2="-18" stroke="#8c6239" stroke-width="2.5"/>
+              <!-- Palm Fronds -->
+              <path d="M0,-18 Q-12,-28 -20,-16 M0,-18 Q12,-28 20,-16 M0,-18 Q-18,-12 -22,-2 M0,-18 Q18,-12 22,-2 M0,-18 Q0,-32 0,-36" fill="none" stroke="#2d6a4f" stroke-width="2.5" stroke-linecap="round"/>
+            </g>
+          
+            <g transform="translate(40, 190)">
+              <ellipse cx="0" cy="5" rx="8" ry="4" fill="#000000" opacity="0.25"/>
+              <line x1="0" y1="5" x2="0" y2="-18" stroke="#8c6239" stroke-width="2.5"/>
+              <!-- Palm Fronds -->
+              <path d="M0,-18 Q-12,-28 -20,-16 M0,-18 Q12,-28 20,-16 M0,-18 Q-18,-12 -22,-2 M0,-18 Q18,-12 22,-2 M0,-18 Q0,-32 0,-36" fill="none" stroke="#2d6a4f" stroke-width="2.5" stroke-linecap="round"/>
+            </g>
+          
+            <g transform="translate(130, 240)">
+              <ellipse cx="0" cy="5" rx="8" ry="4" fill="#000000" opacity="0.25"/>
+              <line x1="0" y1="5" x2="0" y2="-18" stroke="#8c6239" stroke-width="2.5"/>
+              <!-- Palm Fronds -->
+              <path d="M0,-18 Q-12,-28 -20,-16 M0,-18 Q12,-28 20,-16 M0,-18 Q-18,-12 -22,-2 M0,-18 Q18,-12 22,-2 M0,-18 Q0,-32 0,-36" fill="none" stroke="#2d6a4f" stroke-width="2.5" stroke-linecap="round"/>
+            </g>
+          
+            <g transform="translate(170, 230)">
+              <ellipse cx="0" cy="5" rx="8" ry="4" fill="#000000" opacity="0.25"/>
+              <line x1="0" y1="5" x2="0" y2="-18" stroke="#8c6239" stroke-width="2.5"/>
+              <!-- Palm Fronds -->
+              <path d="M0,-18 Q-12,-28 -20,-16 M0,-18 Q12,-28 20,-16 M0,-18 Q-18,-12 -22,-2 M0,-18 Q18,-12 22,-2 M0,-18 Q0,-32 0,-36" fill="none" stroke="#2d6a4f" stroke-width="2.5" stroke-linecap="round"/>
+            </g>
+          
+            <g transform="translate(210, 210)">
+              <ellipse cx="0" cy="5" rx="8" ry="4" fill="#000000" opacity="0.25"/>
+              <line x1="0" y1="5" x2="0" y2="-18" stroke="#8c6239" stroke-width="2.5"/>
+              <!-- Palm Fronds -->
+              <path d="M0,-18 Q-12,-28 -20,-16 M0,-18 Q12,-28 20,-16 M0,-18 Q-18,-12 -22,-2 M0,-18 Q18,-12 22,-2 M0,-18 Q0,-32 0,-36" fill="none" stroke="#2d6a4f" stroke-width="2.5" stroke-linecap="round"/>
+            </g>
+          
+            <g transform="translate(250, 180)">
+              <ellipse cx="0" cy="5" rx="8" ry="4" fill="#000000" opacity="0.25"/>
+              <line x1="0" y1="5" x2="0" y2="-18" stroke="#8c6239" stroke-width="2.5"/>
+              <!-- Palm Fronds -->
+              <path d="M0,-18 Q-12,-28 -20,-16 M0,-18 Q12,-28 20,-16 M0,-18 Q-18,-12 -22,-2 M0,-18 Q18,-12 22,-2 M0,-18 Q0,-32 0,-36" fill="none" stroke="#2d6a4f" stroke-width="2.5" stroke-linecap="round"/>
+            </g>
+          
+            <g transform="translate(290, 160)">
+              <ellipse cx="0" cy="5" rx="8" ry="4" fill="#000000" opacity="0.25"/>
+              <line x1="0" y1="5" x2="0" y2="-18" stroke="#8c6239" stroke-width="2.5"/>
+              <!-- Palm Fronds -->
+              <path d="M0,-18 Q-12,-28 -20,-16 M0,-18 Q12,-28 20,-16 M0,-18 Q-18,-12 -22,-2 M0,-18 Q18,-12 22,-2 M0,-18 Q0,-32 0,-36" fill="none" stroke="#2d6a4f" stroke-width="2.5" stroke-linecap="round"/>
+            </g>
+          
+        </g>
+      </g>
+
+      <!-- ==================== MAP PIN BADGES ==================== -->
+      <!-- Pin: Restaurante São João -->
+      <g transform="translate(190, 710)">
+        <rect x="-8" y="-12" width="130" height="24" rx="12" fill="#ffffff" filter="url(#dropShadow)"/>
+        <circle cx="4" cy="0" r="8" fill="#ea580c"/>
+        <!-- Fork & Knife Icon -->
+        <path d="M2,-4 L2,4 M6,-4 L6,4 M1,-4 L3,-4 M5,-4 L7,-4" stroke="#ffffff" stroke-width="1.2" stroke-linecap="round"/>
+        <text x="18" y="4" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="700" fill="#334155">Restaurante São João</text>
+      </g>
+
+      <!-- Pin: Hotel Vila Alice -->
+      <g transform="translate(730, 930)">
+        <rect x="-8" y="-12" width="105" height="24" rx="12" fill="#ffffff" filter="url(#dropShadow)"/>
+        <circle cx="4" cy="0" r="8" fill="#9333ea"/>
+        <!-- Bed Icon -->
+        <path d="M0,2 L8,2 M0,-2 L0,2 M8,0 L8,2 M2,0 L4,0" stroke="#ffffff" stroke-width="1.2"/>
+        <text x="18" y="4" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="700" fill="#334155">Hotel Vila Alice</text>
+      </g>
+
+      <!-- Pin: Colégio Patrícia Rossana -->
+      <g transform="translate(860, 755)">
+        <rect x="-8" y="-12" width="145" height="24" rx="12" fill="#ffffff" filter="url(#dropShadow)"/>
+        <circle cx="4" cy="0" r="8" fill="#0284c7"/>
+        <!-- Grad Cap Icon -->
+        <path d="M0,0 L4,-3 L8,0 L4,3 Z M8,0 L8,4" stroke="#ffffff" stroke-width="1" fill="none"/>
+        <text x="18" y="4" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="700" fill="#334155">Colégio Patrícia Rossana</text>
+      </g>
+
+      <!-- Pin: Escola 83 -->
+      <g transform="translate(970, 815)">
+        <rect x="-8" y="-12" width="80" height="24" rx="12" fill="#ffffff" filter="url(#dropShadow)"/>
+        <circle cx="4" cy="0" r="8" fill="#475569"/>
+        <text x="18" y="4" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="700" fill="#334155">Escola 83</text>
+      </g>
+
+      <!-- Pin: Dar El Amir Lebanese Restaurant -->
+      <g transform="translate(940, 520)">
+        <rect x="-8" y="-12" width="125" height="24" rx="12" fill="#ffffff" filter="url(#dropShadow)"/>
+        <circle cx="4" cy="0" r="8" fill="#ea580c"/>
+        <text x="18" y="4" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="700" fill="#334155">Dar El Amir</text>
+      </g>
+
+      <!-- Avenue Label -->
+      <text x="215" y="845" font-family="system-ui, sans-serif" font-size="13" font-weight="700" fill="#ffffff" opacity="0.85" transform="rotate(-58, 215, 845)">Av. Deolinda Rodrigues</text>
+
+      <!-- ==================== GOOGLE MAPS IPIL POPOVER CARD ==================== -->
+      <g id="ipil-popover" transform="translate(260, 440)" filter="url(#dropShadow)">
+        <!-- Pointer to IPIL roof -->
+        <path d="M330,195 L338,245 L346,195 Z" fill="#ffffff"/>
+        <!-- Orange Map Pin Marker at the tip -->
+        <g transform="translate(338, 260)">
+          <path d="M0,0 C-12,-12 -14,-22 0,-34 C14,-22 12,-12 0,0 Z" fill="#ea580c"/>
+          <circle cx="0" cy="-22" r="7" fill="#ffffff"/>
+          <!-- Graduation cap in pin -->
+          <polygon points="-4,-22 0,-24 4,-22 0,-20" fill="#ea580c"/>
+        </g>
+
+        <!-- Popover Body Box -->
+        <rect x="0" y="0" width="370" height="195" rx="14" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5"/>
+
+        <!-- Left Photo: IPIL Facade Architecture -->
+        <g transform="translate(12, 12)">
+          <rect width="135" height="171" rx="10" fill="#e9ecef"/>
+          <!-- Sky in photo -->
+          <rect width="135" height="60" rx="10" fill="#dbeafe"/>
+          <!-- IPIL Building Portico in photo -->
+          <rect x="10" y="40" width="115" height="131" fill="#e9c46a"/>
+          <!-- Columns -->
+          <line x1="25" y1="50" x2="25" y2="160" stroke="#f4a261" stroke-width="4"/>
+          <line x1="45" y1="50" x2="45" y2="160" stroke="#f4a261" stroke-width="4"/>
+          <line x1="65" y1="50" x2="65" y2="160" stroke="#f4a261" stroke-width="4"/>
+          <line x1="85" y1="50" x2="85" y2="160" stroke="#f4a261" stroke-width="4"/>
+          <line x1="105" y1="50" x2="105" y2="160" stroke="#f4a261" stroke-width="4"/>
+          <!-- Top Entablature -->
+          <rect x="5" y="30" width="125" height="22" fill="#d4a373"/>
+          <text x="67" y="44" font-family="system-ui, sans-serif" font-size="8" font-weight="900" fill="#ffffff" text-anchor="middle">IPIL • MAKARENKO</text>
+          <!-- Steps at bottom -->
+          <rect x="15" y="160" width="105" height="11" fill="#ced4da"/>
+        </g>
+
+        <!-- Right Content Details -->
+        <g transform="translate(160, 24)">
+          <!-- Name -->
+          <text x="0" y="16" font-family="system-ui, -apple-system, sans-serif" font-size="20" font-weight="800" fill="#1e293b" letter-spacing="0.02em">IPIL</text>
+          <!-- Address code -->
+          <text x="0" y="38" font-family="system-ui, sans-serif" font-size="12" font-weight="500" fill="#64748b">56GW+7M, Luanda, Angola</text>
+
+          <!-- Rating Stars -->
+          <g transform="translate(0, 58)">
+            <text x="0" y="0" font-family="system-ui, sans-serif" font-size="13" font-weight="800" fill="#d97706">3.9</text>
+            <g transform="translate(24, -10)" fill="#f59e0b">
+              <!-- 4 full stars, 1 half/empty -->
+              <polygon points="6,0 8,4 12,5 9,8 10,12 6,10 2,12 3,8 0,5 4,4"/>
+              <polygon points="20,0 22,4 26,5 23,8 24,12 20,10 16,12 17,8 14,5 18,4"/>
+              <polygon points="34,0 36,4 40,5 37,8 38,12 34,10 30,12 31,8 28,5 32,4"/>
+              <polygon points="48,0 50,4 54,5 51,8 52,12 48,10 44,12 45,8 42,5 46,4"/>
+              <polygon points="62,0 64,4 68,5 65,8 66,12 62,10 58,12 59,8 56,5 60,4" fill="#cbd5e1"/>
+            </g>
+            <text x="96" y="0" font-family="system-ui, sans-serif" font-size="12" font-weight="500" fill="#64748b">(259)</text>
+          </g>
+
+          <!-- Category -->
+          <g transform="translate(0, 88)">
+            <circle cx="7" cy="-4" r="7" fill="#0284c7" opacity="0.15"/>
+            <polygon points="3,-4 7,-7 11,-4 7,-1" fill="#0284c7"/>
+            <text x="20" y="0" font-family="system-ui, sans-serif" font-size="13" font-weight="600" fill="#0284c7">Technical school</text>
+          </g>
+
+          <!-- Status -->
+          <g transform="translate(0, 118)">
+            <circle cx="4" cy="-4" r="4" fill="#16a34a"/>
+            <text x="14" y="0" font-family="system-ui, sans-serif" font-size="13" font-weight="700" fill="#16a34a">Open</text>
+            <text x="50" y="0" font-family="system-ui, sans-serif" font-size="13" font-weight="500" fill="#64748b">• Closes 4:30 PM</text>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+
+  <!-- ==================== CALLOUT 1: CAMPUS, ESTADIOS E MERCADOS ==================== -->
+  <g id="callout-campus">
+    <!-- Green Origin Node at IPIL sports court -->
+    <circle cx="910" cy="690" r="14" fill="#007A33" filter="url(#softGlow)"/>
+    <circle cx="910" cy="690" r="7" fill="#ffffff"/>
+
+    <!-- Connecting Green Path Line -->
+    <path d="M910,690 L910,120 L1560,120" fill="none" stroke="#007A33" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+
+    <!-- Category Header -->
+    <text x="930" y="105" font-family="Arial Black, Impact, system-ui, sans-serif" font-size="34" font-weight="900" fill="#0f172a" letter-spacing="0.05em">CAMPUS , ESTADIOS E MERCADOS</text>
+
+    <!-- Sub-item 1: FPC ECO SERIES H10 PRO -->
+    <g transform="translate(1000, 160)">
+      <!-- Ecoponto Icon (Green with IoT signal) -->
+      <rect x="0" y="0" width="46" height="58" rx="8" fill="#007A33" filter="url(#dropShadow)"/>
+      <rect x="4" y="4" width="38" height="10" rx="3" fill="#ffffff" opacity="0.2"/>
+      <!-- IoT / Wi-Fi Signal Icon -->
+      <path d="M16,28 Q23,22 30,28 M19,34 Q23,30 27,34" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
+      <circle cx="23" cy="40" r="2.5" fill="#ffffff"/>
+
+      <text x="64" y="38" font-family="system-ui, -apple-system, sans-serif" font-size="24" font-weight="900" fill="#0f172a" letter-spacing="0.02em">FPC ECO SERIES H10 PRO</text>
+    </g>
+
+    <!-- Sub-item 2: FPC ECO SERIES EPSON -->
+    <g transform="translate(1000, 240)">
+      <!-- Ecoponto Icon (Maroon / Burgundy with IoT signal) -->
+      <rect x="0" y="0" width="46" height="58" rx="8" fill="#6b1222" filter="url(#dropShadow)"/>
+      <rect x="4" y="4" width="38" height="10" rx="3" fill="#ffffff" opacity="0.2"/>
+      <!-- IoT / Wi-Fi Signal Icon -->
+      <path d="M16,28 Q23,22 30,28 M19,34 Q23,30 27,34" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
+      <circle cx="23" cy="40" r="2.5" fill="#ffffff"/>
+
+      <text x="64" y="38" font-family="system-ui, -apple-system, sans-serif" font-size="24" font-weight="900" fill="#0f172a" letter-spacing="0.02em">FPC ECO SERIES EPSON</text>
+    </g>
+  </g>
+
+  <!-- ==================== CALLOUT 2: RESIDENCIAL ==================== -->
+  <g id="callout-residencial">
+    <!-- Green Origin Node at Residential Apartment Block -->
+    <circle cx="1200" cy="870" r="14" fill="#007A33" filter="url(#softGlow)"/>
+    <circle cx="1200" cy="870" r="7" fill="#ffffff"/>
+
+    <!-- Connecting Green Path Line -->
+    <path d="M1200,870 L1200,380 L1860,380" fill="none" stroke="#007A33" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+
+    <!-- Category Header -->
+    <text x="1560" y="365" font-family="Arial Black, Impact, system-ui, sans-serif" font-size="34" font-weight="900" fill="#0f172a" letter-spacing="0.05em">RESIDENCIAL</text>
+
+    <!-- Sub-item: FPC ECO SERIES LONGUA -->
+    <g transform="translate(1480, 420)">
+      <!-- Ecoponto Icon (Green with IoT signal) -->
+      <rect x="0" y="0" width="46" height="58" rx="8" fill="#007A33" filter="url(#dropShadow)"/>
+      <rect x="4" y="4" width="38" height="10" rx="3" fill="#ffffff" opacity="0.2"/>
+      <!-- IoT / Wi-Fi Signal Icon -->
+      <path d="M16,28 Q23,22 30,28 M19,34 Q23,30 27,34" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
+      <circle cx="23" cy="40" r="2.5" fill="#ffffff"/>
+
+      <text x="64" y="38" font-family="system-ui, -apple-system, sans-serif" font-size="24" font-weight="900" fill="#0f172a" letter-spacing="0.02em">FPC ECO SERIES LONGUA</text>
+    </g>
+  </g>
+
+</svg>

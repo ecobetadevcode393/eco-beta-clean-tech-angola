@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg-grad-ossali" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0c130e"/>
+      <stop offset="100%" stop-color="#142116"/>
+    </linearGradient>
+    <linearGradient id="ossali-body" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#232e25"/>
+      <stop offset="50%" stop-color="#344436"/>
+      <stop offset="100%" stop-color="#1f2820"/>
+    </linearGradient>
+    <filter id="glow-ossali" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <rect width="240" height="240" rx="20" fill="url(#bg-grad-ossali)"/>
+  <rect width="238" height="238" x="1" y="1" rx="19" fill="none" stroke="#53ee81" stroke-opacity="0.2" stroke-width="1.5"/>
+
+  <!-- Compact Pedestrian Walkway Bin -->
+  <!-- Top Roof -->
+  <polygon points="68,54 172,54 180,44 60,44" fill="#007A33" stroke="#53ee81" stroke-width="1.2"/>
+
+  <!-- Body -->
+  <rect x="68" y="54" width="104" height="136" rx="6" fill="url(#ossali-body)" stroke="#455647" stroke-width="1.5"/>
+
+  <!-- Dual slot aperture -->
+  <rect x="78" y="66" width="84" height="22" rx="4" fill="#0d140e" stroke="#53ee81" stroke-opacity="0.8" stroke-width="1"/>
+  <circle cx="92" cy="77" r="3" fill="#53ee81" filter="url(#glow-ossali)"/>
+  <text x="122" y="80" fill="#e8ede5" font-family="'Lexend', sans-serif" font-size="7.5" font-weight="600" text-anchor="middle">PEDONAL MUNICIPAL</text>
+
+  <!-- Metal Grille / Ventilation -->
+  <g transform="translate(82, 102)">
+    <rect width="76" height="48" rx="4" fill="#121a14" stroke="#2e3e30" stroke-width="0.8"/>
+    <line x1="10" y1="12" x2="66" y2="12" stroke="#53ee81" stroke-opacity="0.5" stroke-width="1"/>
+    <line x1="10" y1="24" x2="66" y2="24" stroke="#53ee81" stroke-opacity="0.5" stroke-width="1"/>
+    <line x1="10" y1="36" x2="66" y2="36" stroke="#53ee81" stroke-opacity="0.5" stroke-width="1"/>
+  </g>
+
+  <!-- Municipal Tag -->
+  <rect x="88" y="160" width="64" height="18" rx="4" fill="#101812" stroke="#53ee81" stroke-width="0.9"/>
+  <text x="120" y="172" fill="#53ee81" font-family="'Lexend', sans-serif" font-size="7" font-weight="700" text-anchor="middle">CALÇADAS &amp; PRAÇAS</text>
+
+  <!-- Pavement Base -->
+  <rect x="56" y="190" width="128" height="14" rx="3" fill="#121813" stroke="#324134" stroke-width="1.2"/>
+  <line x1="62" y1="197" x2="178" y2="197" stroke="#53ee81" stroke-opacity="0.6" stroke-width="1"/>
+
+  <!-- Top Badge -->
+  <g transform="translate(138, 14)">
+    <rect width="88" height="18" rx="9" fill="#112918" stroke="#53ee81" stroke-width="1"/>
+    <text x="44" y="12" fill="#53ee81" font-family="'Lexend', sans-serif" font-size="7.5" font-weight="700" text-anchor="middle">VIAS PÚBLICAS</text>
+  </g>
+</svg>

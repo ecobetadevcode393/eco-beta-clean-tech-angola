@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg-grad-mbange" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0c120e"/>
+      <stop offset="100%" stop-color="#142017"/>
+    </linearGradient>
+    <linearGradient id="mbange-body" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#232f26"/>
+      <stop offset="50%" stop-color="#364738"/>
+      <stop offset="100%" stop-color="#1e2720"/>
+    </linearGradient>
+    <filter id="glow-mbange" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <rect width="240" height="240" rx="20" fill="url(#bg-grad-mbange)"/>
+  <rect width="238" height="238" x="1" y="1" rx="19" fill="none" stroke="#53ee81" stroke-opacity="0.2" stroke-width="1.5"/>
+
+  <!-- Storefront Entry Compact Bin -->
+  <!-- Beveled Lid -->
+  <polygon points="72,50 168,50 160,38 80,38" fill="#007A33" stroke="#53ee81" stroke-width="1.2"/>
+
+  <!-- Cabinet Body -->
+  <rect x="72" y="50" width="96" height="136" rx="8" fill="url(#mbange-body)" stroke="#455948" stroke-width="1.5"/>
+
+  <!-- Proximity sensor opening -->
+  <rect x="82" y="62" width="76" height="24" rx="6" fill="#0d140e" stroke="#53ee81" stroke-width="1.2"/>
+  <text x="120" y="77" fill="#53ee81" font-family="'Lexend', sans-serif" font-size="7.5" font-weight="700" text-anchor="middle">SENSOR TOQUE ZERO</text>
+
+  <!-- QR Reward Points Emblem -->
+  <g transform="translate(94, 98)">
+    <rect width="52" height="42" rx="4" fill="#121a14" stroke="#53ee81" stroke-opacity="0.7" stroke-width="1"/>
+    <!-- QR matrix mini blocks -->
+    <rect x="8" y="8" width="10" height="10" fill="#53ee81"/>
+    <rect x="34" y="8" width="10" height="10" fill="#53ee81"/>
+    <rect x="8" y="24" width="10" height="10" fill="#53ee81"/>
+    <rect x="22" y="14" width="8" height="8" fill="#53ee81"/>
+    <rect x="24" y="26" width="6" height="6" fill="#53ee81"/>
+    <rect x="34" y="26" width="10" height="6" fill="#53ee81"/>
+  </g>
+
+  <!-- Foot pedal at bottom -->
+  <rect x="92" y="174" width="56" height="8" rx="2" fill="#007A33" stroke="#53ee81" stroke-width="1"/>
+  <line x1="98" y1="178" x2="142" y2="178" stroke="#53ee81" stroke-width="1.5" filter="url(#glow-mbange)"/>
+
+  <!-- Non-slip Base feet -->
+  <rect x="64" y="186" width="112" height="10" rx="3" fill="#111612" stroke="#324234" stroke-width="1.2"/>
+
+  <!-- Top Badge -->
+  <g transform="translate(136, 14)">
+    <rect width="90" height="18" rx="9" fill="#122918" stroke="#53ee81" stroke-width="1"/>
+    <text x="45" y="12" fill="#53ee81" font-family="'Lexend', sans-serif" font-size="7.5" font-weight="700" text-anchor="middle">COMÉRCIO &amp; LOJAS</text>
+  </g>
+</svg>

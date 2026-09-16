@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg-grad-ngolo" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0e1510"/>
+      <stop offset="100%" stop-color="#142117"/>
+    </linearGradient>
+    <linearGradient id="ngolo-body" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#243026"/>
+      <stop offset="50%" stop-color="#354638"/>
+      <stop offset="100%" stop-color="#202b22"/>
+    </linearGradient>
+    <filter id="glow-ngolo" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <rect width="240" height="240" rx="20" fill="url(#bg-grad-ngolo)"/>
+  <rect width="238" height="238" x="1" y="1" rx="19" fill="none" stroke="#53ee81" stroke-opacity="0.2" stroke-width="1.5"/>
+
+  <!-- Ngolo Dual Stream Station Body -->
+  <rect x="52" y="46" width="136" height="150" rx="10" fill="url(#ngolo-body)" stroke="#455848" stroke-width="1.5"/>
+
+  <!-- Curved Top Visor -->
+  <path d="M52 56 Q120 40 188 56 L188 66 L52 66 Z" fill="#007A33" stroke="#53ee81" stroke-width="1"/>
+  <circle cx="120" cy="56" r="3" fill="#53ee81" filter="url(#glow-ngolo)"/>
+
+  <!-- Left Compartment: Recicláveis -->
+  <g transform="translate(62, 74)">
+    <rect width="52" height="108" rx="6" fill="#111812" stroke="#38bdf8" stroke-width="1.2"/>
+    <rect x="8" y="10" width="36" height="8" rx="3" fill="#38bdf8" fill-opacity="0.8"/>
+    <!-- Recyclable icons -->
+    <path d="M26 30l-8 14h16z" stroke="#38bdf8" stroke-width="1.2" fill="none"/>
+    <text x="26" y="58" fill="#ffffff" font-family="'Lexend', sans-serif" font-size="7" font-weight="700" text-anchor="middle">RECICLÁVEIS</text>
+    <text x="26" y="68" fill="#38bdf8" font-family="'Lexend', sans-serif" font-size="6" text-anchor="middle">PAPEL &amp; PET</text>
+    <!-- Sensor bar -->
+    <rect x="8" y="92" width="36" height="4" rx="2" fill="#38bdf8" fill-opacity="0.6"/>
+  </g>
+
+  <!-- Right Compartment: Indiferenciados -->
+  <g transform="translate(126, 74)">
+    <rect width="52" height="108" rx="6" fill="#111812" stroke="#53ee81" stroke-width="1.2"/>
+    <rect x="8" y="10" width="36" height="8" rx="3" fill="#53ee81" fill-opacity="0.8"/>
+    <!-- Waste icon -->
+    <circle cx="26" cy="36" r="7" stroke="#53ee81" stroke-width="1.2" fill="none"/>
+    <text x="26" y="58" fill="#ffffff" font-family="'Lexend', sans-serif" font-size="7" font-weight="700" text-anchor="middle">GERAL</text>
+    <text x="26" y="68" fill="#53ee81" font-family="'Lexend', sans-serif" font-size="6" text-anchor="middle">ORGÂNICO</text>
+    <!-- Sensor bar -->
+    <rect x="8" y="92" width="36" height="4" rx="2" fill="#53ee81" fill-opacity="0.6"/>
+  </g>
+
+  <!-- Heavy Base Frame -->
+  <rect x="44" y="196" width="152" height="12" rx="3" fill="#0f1510" stroke="#344336" stroke-width="1.2"/>
+  <circle cx="58" cy="202" r="2.5" fill="#53ee81"/>
+  <circle cx="182" cy="202" r="2.5" fill="#53ee81"/>
+
+  <!-- Top Badge -->
+  <g transform="translate(136, 14)">
+    <rect width="90" height="18" rx="9" fill="#132719" stroke="#53ee81" stroke-width="1"/>
+    <text x="45" y="12" fill="#53ee81" font-family="'Lexend', sans-serif" font-size="7.5" font-weight="700" text-anchor="middle">ESCOLAS &amp; CAMPUS</text>
+  </g>
+</svg>

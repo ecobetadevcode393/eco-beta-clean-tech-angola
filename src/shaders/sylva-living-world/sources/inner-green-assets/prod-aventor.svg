@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg-grad-aventor" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0d140f"/>
+      <stop offset="100%" stop-color="#142117"/>
+    </linearGradient>
+    <linearGradient id="aventor-pole" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#1c251e"/>
+      <stop offset="50%" stop-color="#344637"/>
+      <stop offset="100%" stop-color="#182119"/>
+    </linearGradient>
+    <filter id="glow-aventor" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <rect width="240" height="240" rx="20" fill="url(#bg-grad-aventor)"/>
+  <rect width="238" height="238" x="1" y="1" rx="19" fill="none" stroke="#53ee81" stroke-opacity="0.2" stroke-width="1.5"/>
+
+  <!-- Urban Column with Hood -->
+  <!-- Top Hood with Antenna -->
+  <line x1="120" y1="24" x2="120" y2="40" stroke="#53ee81" stroke-width="2" filter="url(#glow-aventor)"/>
+  <circle cx="120" cy="22" r="3.5" fill="#53ee81"/>
+
+  <path d="M72 52 Q120 34 168 52 L172 64 L68 64 Z" fill="#007A33" stroke="#53ee81" stroke-width="1.2"/>
+
+  <!-- Main Waste Drum -->
+  <rect x="74" y="64" width="92" height="126" rx="8" fill="url(#aventor-pole)" stroke="#455747" stroke-width="1.5"/>
+
+  <!-- Front Opening Slot -->
+  <rect x="86" y="76" width="68" height="26" rx="6" fill="#0c130d" stroke="#53ee81" stroke-width="1.2"/>
+  <line x1="94" y1="89" x2="146" y2="89" stroke="#53ee81" stroke-width="2" stroke-linecap="round" filter="url(#glow-aventor)"/>
+
+  <!-- IoT Smart Sensor Badge -->
+  <g transform="translate(90, 114)">
+    <rect width="60" height="28" rx="4" fill="#101711" stroke="#334635" stroke-width="1"/>
+    <!-- Wireless signal -->
+    <path d="M16 16a8 8 0 0 1 12 0M20 20a3 3 0 0 1 4 0" stroke="#53ee81" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    <circle cx="22" cy="23" r="1.5" fill="#53ee81"/>
+    <text x="34" y="21" fill="#53ee81" font-family="'Lexend', sans-serif" font-size="7" font-weight="700">TELEMETRIA</text>
+  </g>
+
+  <!-- Level indicator gauge -->
+  <rect x="90" y="152" width="60" height="6" rx="3" fill="#0b110c" stroke="#2b3b2d" stroke-width="0.8"/>
+  <rect x="92" y="154" width="40" height="2" rx="1" fill="#53ee81" filter="url(#glow-aventor)"/>
+
+  <!-- Heavy Street Base Column -->
+  <rect x="108" y="190" width="24" height="20" fill="#1b251d" stroke="#344336" stroke-width="1"/>
+  <ellipse cx="120" cy="210" rx="54" ry="10" fill="#101711" stroke="#53ee81" stroke-opacity="0.6" stroke-width="1.2"/>
+
+  <!-- Top Badge -->
+  <g transform="translate(132, 14)">
+    <rect width="94" height="18" rx="9" fill="#112918" stroke="#53ee81" stroke-width="1"/>
+    <text x="47" y="12" fill="#53ee81" font-family="'Lexend', sans-serif" font-size="7.5" font-weight="700" text-anchor="middle">URBANO CONECTADO</text>
+  </g>
+</svg>

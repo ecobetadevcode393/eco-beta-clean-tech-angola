@@ -1,0 +1,6 @@
+{
+  "name": "Eco Beta - Clean Tech Angola",
+  "description": "Economia circular, ecopontos eletrónicos inteligentes e tecnologia eletromecânica para valorização de resíduos em Angola.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

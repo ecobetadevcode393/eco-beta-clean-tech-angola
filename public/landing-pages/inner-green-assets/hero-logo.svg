@@ -1,0 +1,32 @@
+<svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" class="eco-logo-svg">
+  <defs>
+    <clipPath id="circle-clip">
+      <circle cx="60" cy="60" r="56" />
+    </clipPath>
+    <linearGradient id="shadow-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#dedede" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#ececec" stop-opacity="0.5"/>
+    </linearGradient>
+  </defs>
+  <!-- Circular badge base matching hero-logo.png -->
+  <circle cx="60" cy="60" r="56" fill="#f8f9fa" />
+  
+  <g clip-path="url(#circle-clip)">
+    <!-- Diagonal cast shadow from beta to bottom-right -->
+    <path d="M60 12 L120 72 L120 120 L40 120 L30 102 L60 72 Z" fill="url(#shadow-grad)" />
+    
+    <!-- ECO on the left -->
+    <text x="10" y="64" font-family="'Lexend', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="16.5" font-weight="700" fill="#1c1c1c" letter-spacing="0.02em">ECO</text>
+    
+    <!-- Stylized Beta (left half: solid black #141414) -->
+    <!-- Outer left spine + top arch + bottom J-hook -->
+    <path d="M60 12 C44 12 38 21 38 33 V88 C38 97 32 102 24 102 H22 V114 C39 114 50 104 50 88 V30 C50 24 54 21 60 21 Z" fill="#111111" />
+    
+    <!-- Stylized Beta (right half: dark charcoal #3c3c3c) -->
+    <!-- Top loop of B and bottom loop of B -->
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M60 12 C74 12 85 19 85 33 C85 43 78 48 70 51 C81 54 91 62 91 76 C91 91 77 99 60 99 V88 C71 88 79 83 79 75 C79 67 71 62 60 62 V51 C68 51 74 46 74 38 C74 30 68 21 60 21 V12 Z M60 21 V51 C68 51 74 46 74 38 C74 30 68 21 60 21 Z M60 62 V88 C71 88 79 83 79 75 C79 67 71 62 60 62 Z" fill="#3c3c3c" />
+    
+    <!-- ETA on the right -->
+    <text x="93" y="64" font-family="'Lexend', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="16.5" font-weight="700" fill="#626262" letter-spacing="0.02em">ETA</text>
+  </g>
+</svg>
