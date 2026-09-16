@@ -715,7 +715,14 @@ export type SylvaHeroVariant = (typeof SYLVA_HERO_VARIANTS)[number];
 
 export type SylvaHeroProps = LandingPageProps & PageTypographyProps & { variant?: SylvaHeroVariant };
 
-const SYLVA_HERO_BASE_URL = "/landing-pages/inner-green-3d.html";
+/**
+ * Rooted at the deployment subpath so the frame, the preload scanner and the relative
+ * asset paths inside the authored document all resolve under it. Empty for "/" hosts;
+ * the GitHub Pages workflow sets it to the repository name.
+ */
+const PUBLIC_BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+
+const SYLVA_HERO_BASE_URL = `${PUBLIC_BASE_PATH}/landing-pages/inner-green-3d.html`;
 
 /**
  * The authored page is served byte-for-byte for Living Green. Sakura Sunset is derived:
