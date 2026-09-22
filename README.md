@@ -2,7 +2,7 @@
 
 Economia circular, ecopontos eletrónicos inteligentes e tecnologia eletromecânica para valorização de resíduos em Angola.
 
-A app é uma página única que monta uma cena 3D interativa (o mundo *Sylva / Living Green*) a partir da landing page autoral já existente em `public/landing-pages/`. O documento autoral nunca é reescrito no disco: é carregado numa moldura isolada (iframe) ou servido por `srcdoc` com as variantes derivadas aplicadas em memória.
+A app é uma página única que monta uma cena 3D interativa (o mundo *Sylva / Living Green*) a partir da landing page autoral já existente em `public/landing-pages/`. O documento autoral nunca é reescrito no disco: é carregado numa moldura isolada (iframe) ou servido por `srcdoc` com as variantes derivadas aplicadas em memória. Por cima da cena, a app monta o ecrã de conta do `myEcobetaApp` (ver [Conta myEcobetaApp](#conta-myecobetaapp)).
 
 ## Stack
 
@@ -35,11 +35,19 @@ Abra `http://localhost:3000`.
 
 - `app/` → rotas do App Router (`layout.tsx`, `page.tsx`, `globals.css`)
 - `components/Scene.tsx` → liga a página ao `SylvaHero`
+- `components/MyEcobetaAuth.tsx` → ecrã de conta (entrar / criar conta) sobre a cena
+- `lib/myecobetaAuth.ts` → validação da conta e o seam para o serviço real
 - `src/shaders/` → pacote de cenas e landing pages (`threeui`)
   - `sylva-living-world/` → o mundo *Living Green* e as variantes derivadas
   - `landing-pages/` → moldura isolada, tipografia e catálogo de páginas autorais
 - `public/landing-pages/` → página autoral `inner-green-3d.html` e os seus assets
 - `.github/workflows/` → CI e deploy para GitHub Pages
+
+## Conta myEcobetaApp
+
+O dock do header autoral tem uma pílula `myEcobetaApp` que abre o ecrã de **entrar** e **criar conta**. A pílula vive dentro da moldura isolada: não pode desenhar o ecrã nem navegar a janela de topo (a sandbox não inclui `allow-top-navigation`), por isso limita-se a enviar `postMessage` com `myecobetaapp:open`, e o componente `components/MyEcobetaAuth.tsx` — montado em `app/page.tsx`, por cima do frame — responde com o ecrã.
+
+O ecrã funciona sem servidor: valida os campos em `lib/myecobetaAuth.ts` e mantém a sessão apenas em memória, o que é o que o deploy em GitHub Pages faz hoje. Para ligar o serviço real basta definir `NEXT_PUBLIC_MYECOBETA_API_URL`: o mesmo formulário passa a fazer `POST` para `<URL>/sign-in` e `<URL>/sign-up` com `credentials: "include"`, e uma resposta `{ message, fieldErrors }` volta diretamente ao formulário.
 
 ## Variáveis de ambiente
 
@@ -52,6 +60,7 @@ Copie `.env.example` para `.env.local`. Nenhuma variável é obrigatória para c
 | `DISABLE_HMR` | Não | `true` desliga o file watching (usado pelo AI Studio) |
 | `NEXT_PUBLIC_BASE_PATH` | Não | Prefixo do subcaminho de publicação, ex. `/eco-beta-clean-tech-angola` |
 | `NEXT_OUTPUT` | Não | `export` gera o site estático em `out/` em vez do bundle `standalone` |
+| `NEXT_PUBLIC_MYECOBETA_API_URL` | Não | Base do serviço de contas do myEcobetaApp; sem ela o ecrã valida e guarda a sessão localmente |
 
 ## Deploy
 

@@ -209,6 +209,25 @@
   .dock-item.is-active .glyph{ opacity:.8; }
   .dock-item--enter{ color:var(--ink); background:rgba(255,255,255,.075); }
 
+  /* myEcobetaApp: the account pill. It is authored here, but the screen it opens belongs
+     to the app shell hosting this page, so it asks for it over postMessage rather than
+     navigating out of a sandboxed frame.
+     It deliberately carries no data-dock: that keeps it out of the dock's magnify loop
+     and stops it taking .is-active away from the section pills. The rim light still comes
+     from data-spec, and the states below stand in for the [data-near] pair the loop
+     writes on its siblings. The brand keeps its own casing, which is why this is the one
+     pill in the bar that is not uppercased. */
+  .dock-item--app{
+    color:var(--ink);
+    background:rgba(255,255,255,.075);
+    border-color:rgba(255,255,255,.13);
+    text-transform:none; letter-spacing:calc(.3 * var(--u));
+  }
+  .dock-item--app:hover, .dock-item--app:focus-visible{
+    border-color:rgba(255,255,255,.34);
+    background:rgba(255,255,255,.13);
+  }
+
   /* ── specular rim ────────────────────────────────────────────────────
      A conic gradient masked down to the border, whose start angle points at
      the pointer and whose opacity falls off with distance. It is the reason
@@ -745,6 +764,12 @@
           <svg viewBox="0 0 16 16"><path d="M6.6 2.5h5.1a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H6.6"/><path d="M2.6 8h6.6"/><path d="m7 5.6 2.4 2.4L7 10.4"/></svg>
         </span>
         <span>Contacto</span>
+      </a>
+      <a class="dock-item dock-item--app" id="myecobetaapp" data-spec href="#" style="--d:380ms" aria-label="myEcobetaApp — entrar ou criar conta" aria-haspopup="dialog">
+        <span class="glyph" aria-hidden="true">
+          <svg viewBox="0 0 16 16"><circle cx="8" cy="5.4" r="2.6"/><path d="M3.4 13.4c.5-2.6 2.3-4 4.6-4s4.1 1.4 4.6 4"/></svg>
+        </span>
+        <span>myEcobetaApp</span>
       </a>
     </nav>
   </div>
@@ -6546,6 +6571,19 @@ window.__seek   = v => { clock = v; drawn = null; };
     initEcoModal();
   }
 })();
+</script>
+<script>
+  /* myEcobetaApp: the account screen is React, outside this frame, so this pill only asks
+     for it. postMessage rather than a navigation because the frame is sandboxed without
+     allow-top-navigation, and the app listens for exactly this payload. */
+  (function () {
+    var trigger = document.getElementById('myecobetaapp');
+    if (!trigger) return;
+    trigger.addEventListener('click', function (event) {
+      event.preventDefault();
+      window.parent.postMessage({ type: 'myecobetaapp:open' }, '*');
+    });
+  })();
 </script>
 </body>
 </html>
