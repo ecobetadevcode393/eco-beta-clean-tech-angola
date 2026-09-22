@@ -67,6 +67,20 @@ export class MyEcobetaAuthError extends Error {
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const MIN_PASSWORD_LENGTH = 8;
 
+/**
+ * The two letters both screens put in the account's avatar. Here rather than in either of
+ * them, so the hero's account panel and the recycling sheet cannot initial the same name
+ * differently.
+ */
+export function accountInitials(name: string): string {
+  return name
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((word) => word.charAt(0).toUpperCase())
+    .join("");
+}
+
 export function validateSignIn({ email, password }: MyEcobetaSignInValues): MyEcobetaFieldErrors {
   const errors: MyEcobetaFieldErrors = {};
 

@@ -8,12 +8,16 @@ import {
   MYECOBETA_IS_LOCAL,
   MYECOBETA_OPEN_MESSAGE,
   MyEcobetaAuthError,
+  accountInitials,
   signIn,
   signUp,
   type MyEcobetaAccount,
   type MyEcobetaAuthMode,
   type MyEcobetaFieldErrors,
 } from "@/lib/myecobetaAuth";
+import { ECOBETA_FACE_STACK, ECOBETA_FACE_STYLE } from "@/lib/ecobetaFace";
+import { EcobetaRecycling } from "@/components/EcobetaRecycling";
+import { useEcobetaRecycling } from "@/hooks/use-ecobeta-recycling";
 
 /*
  * The account screen for the hero's myEcobetaApp pill.
@@ -23,19 +27,12 @@ import {
  * the top window anywhere either. So it posts MYECOBETA_OPEN_MESSAGE and this component
  * answers. Keeping the screen here, rather than in the authored page, is also what keeps
  * the forms and their state in React and the page free of app chrome.
+ *
+ * It owns two screens, because they are two halves of one session: the form, and — once there
+ * is an account — the recycling sheet where the points are earned. The session, the face and the
+ * ledger live outside both of them (`lib/ecobetaFace`, `hooks/use-ecobeta-recycling`) so neither
+ * screen has to know how the other is drawn.
  */
-
-/** Deployment subpath, needed by every URL this screen points at. See next.config.ts. */
-const PUBLIC_BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
-
-/**
- * The screen wears the hero's own face so it reads as part of the page instead of as a
- * browser-default overlay. It is the exact file the hero frame has already loaded, so the
- * browser answers from cache rather than fetching the face a second time.
- */
-const MYECOBETA_FACE_STYLE = `@font-face{font-family:'Lexend';font-style:normal;font-weight:100 900;font-display:swap;src:url('${PUBLIC_BASE_PATH}/landing-pages/inner-green-assets/lexend-latin.woff2') format('woff2');}`;
-
-const FACE_STACK = "'Lexend', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
 
 /** The hero's palette, so the overlay and the page read as the same material. */
 const PANEL_BG = "#20261d";
@@ -47,6 +44,9 @@ const ALERT = "#ffb4a2";
 const EASE: [number, number, number, number] = [0.22, 0.61, 0.36, 1];
 const EASE_OUT: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
+/** Which of the two screens the overlay is showing. */
+type MyEcobetaScreen = "entrar" | "reciclar";
+
 export function MyEcobetaAuth() {
   const [open, setOpen] = useState(false);
   const [account, setAccount] = useState<MyEcobetaAccount | null>(null);
@@ -56,6 +56,13 @@ export function MyEcobetaAuth() {
    * mount, not to an effect that clears it after the fact.
    */
   const [visit, setVisit] = useState(0);
+  /*
+   * The screen the overlay lands on. Signing in is what moves it to the sheet, so the points are
+   * the first thing an account sees; from there "Meu painel" brings the form back, and signing out
+   * from the panel is what sends it home again.
+   */
+  const [screen, setScreen] = useState<MyEcobetaScreen>("entrar");
+  const recycling = useEcobetaRecycling();
 
   useEffect(() => {
     function onMessage(event: MessageEvent) {
@@ -68,23 +75,46 @@ export function MyEcobetaAuth() {
       if (event.origin !== window.location.origin && event.origin !== "null") return;
 
       setVisit((current) => current + 1);
+      // A session that is already open goes straight back to the points.
+      setScreen(account ? "reciclar" : "entrar");
       setOpen(true);
     }
 
     window.addEventListener("message", onMessage);
     return () => window.removeEventListener("message", onMessage);
-  }, []);
+  }, [account]);
 
   return (
     <>
-      <style dangerouslySetInnerHTML={{ __html: MYECOBETA_FACE_STYLE }} />
+      <style dangerouslySetInnerHTML={{ __html: ECOBETA_FACE_STYLE }} />
       <MyEcobetaDialog
         key={visit}
-        open={open}
+        open={open && screen === "entrar"}
         account={account}
-        onAccount={setAccount}
+        // Signing in opens the recycling sheet; signing out closes it again.
+        onAccount={(next) => {
+          setAccount(next);
+          setScreen(next ? "reciclar" : "entrar");
+        }}
+        onReciclar={() => setScreen("reciclar")}
         onClose={() => setOpen(false)}
       />
+      {account ? (
+        <EcobetaRecycling
+          key={`reciclar-${visit}`}
+          open={open && screen === "reciclar"}
+          account={account}
+          points={recycling.points}
+          notifications={recycling.entries.length}
+          onRegister={recycling.register}
+          onBack={() => setScreen("entrar")}
+          onClose={() => setOpen(false)}
+          onSignOut={() => {
+            setAccount(null);
+            setScreen("entrar");
+          }}
+        />
+      ) : null}
     </>
   );
 }
@@ -95,6 +125,7 @@ type MyEcobetaDialogProps = {
   open: boolean;
   account: MyEcobetaAccount | null;
   onAccount: (account: MyEcobetaAccount | null) => void;
+  onReciclar: () => void;
   onClose: () => void;
 };
 
@@ -111,7 +142,13 @@ const MODES: { id: MyEcobetaAuthMode; label: string }[] = [
   { id: "sign-up", label: "Criar conta" },
 ];
 
-function MyEcobetaDialog({ open, account, onAccount, onClose }: MyEcobetaDialogProps) {
+function MyEcobetaDialog({
+  open,
+  account,
+  onAccount,
+  onReciclar,
+  onClose,
+}: MyEcobetaDialogProps) {
   const reduceMotion = useReducedMotion();
   const [mode, setMode] = useState<MyEcobetaAuthMode>("sign-in");
   const [form, setForm] = useState(EMPTY_FORM);
@@ -222,7 +259,7 @@ function MyEcobetaDialog({ open, account, onAccount, onClose }: MyEcobetaDialogP
 
           <motion.div
             className="relative w-full max-w-[420px] rounded-[22px] border border-[rgba(255,255,255,0.12)] p-[clamp(18px,4vw,28px)] text-white shadow-[0_30px_90px_rgba(6,10,5,0.6)]"
-            style={{ background: PANEL_BG, fontFamily: FACE_STACK }}
+            style={{ background: PANEL_BG, fontFamily: ECOBETA_FACE_STACK }}
             initial={reduceMotion ? false : { opacity: 0, y: 14, scale: 0.985 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={reduceMotion ? undefined : { opacity: 0, y: 8, scale: 0.99 }}
@@ -248,7 +285,11 @@ function MyEcobetaDialog({ open, account, onAccount, onClose }: MyEcobetaDialogP
             </div>
 
             {account ? (
-              <MyEcobetaAccountPanel account={account} onClose={onClose} onSignOut={signOut} />
+              <MyEcobetaAccountPanel
+                account={account}
+                onReciclar={onReciclar}
+                onSignOut={signOut}
+              />
             ) : (
               <>
                 <div
@@ -510,22 +551,20 @@ function PasswordField({
  * The same screen, once there is an account. The session lives in React state only: with
  * no service behind the form there is nowhere to persist it, so a reload asks for the
  * credentials again rather than pretending to remember them.
+ *
+ * "Reciclar" is the way back to the sheet — that is where an account's points are — and the
+ * panel is where the session is ended, which is why the two live side by side.
  */
 function MyEcobetaAccountPanel({
   account,
+  onReciclar,
   onSignOut,
-  onClose,
 }: {
   account: MyEcobetaAccount;
+  onReciclar: () => void;
   onSignOut: () => void;
-  onClose: () => void;
 }) {
-  const initials = account.name
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((word) => word.charAt(0).toUpperCase())
-    .join("");
+  const initials = accountInitials(account.name);
 
   return (
     <div className="mt-[20px]">
@@ -550,11 +589,11 @@ function MyEcobetaAccountPanel({
       <div className="mt-[18px] flex gap-[9px]">
         <button
           type="button"
-          onClick={onClose}
+          onClick={onReciclar}
           className="flex-1 rounded-[13px] px-[18px] py-[12px] text-[13px] font-medium transition-opacity hover:opacity-90"
           style={{ background: PAPER_BG, color: PAPER_INK }}
         >
-          Continuar
+          Reciclar
         </button>
         <button
           type="button"
