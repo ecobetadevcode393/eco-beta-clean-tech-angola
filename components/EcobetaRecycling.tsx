@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, type ComponentType, type FormEvent } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { ArrowLeft, Bell, ChevronDown, ChevronRight, Loader2, QrCode, Recycle } from "lucide-react";
+import { ArrowLeft, Bell, ChevronDown, ChevronRight, Loader2, QrCode } from "lucide-react";
 
 import { useIsMobile } from "@/hooks/use-mobile";
 import { EcobetaNotifications, EcobetaProfileMenu } from "@/components/EcobetaProfileMenu";
@@ -45,6 +45,15 @@ const BELL_BG = "#181C2E";
 const AVATAR_BG = "#ECF0F4";
 const CARD_SHADOW = "12px 12px 30px rgba(150, 150, 154, 0.15)";
 
+/** Deployment subpath, needed by every URL this module points at. See next.config.ts. */
+const PUBLIC_BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+
+/** The menu glyph the avatar button wears to point at the user menu it opens. */
+const MENU_ICON_SRC = `${PUBLIC_BASE_PATH}/icon/menu.png`;
+
+/** The recycling glyph the "Reciclar" action wears: the authored art, kept in /public as well. */
+const RECYCLE_ICON_SRC = `${PUBLIC_BASE_PATH}/icon/icon-recycle.png`;
+
 /** The authored page's curves, reused so the motion matches the scene. */
 const EASE: [number, number, number, number] = [0.22, 0.61, 0.36, 1];
 const EASE_OUT: [number, number, number, number] = [0.16, 1, 0.3, 1];
@@ -64,8 +73,27 @@ type Action = "manual" | "qrcode";
 /** The sheet borrows two faces from the Menu design: avatar opens profile, bell opens inbox. */
 type SheetView = "reciclar" | "perfil" | "notificacoes";
 
+/**
+ * The recycling action's glyph, served from /public instead of drawn from the icon set: it is
+ * the artwork the screen was authored with, so it travels under the deployment subpath the same
+ * way the menu glyph does. The folder holds a vector twin of it, but that one is a re-trace that
+ * closes the mark's white gaps, so the raster is the artwork drawn here — at the chip's own 21px,
+ * the size of the lucide glyph on the row beside it, so nothing about the row moves.
+ */
+function RecycleGlyph({ className }: { className?: string }) {
+  return (
+    <img
+      src={RECYCLE_ICON_SRC}
+      alt=""
+      aria-hidden="true"
+      className={className}
+      draggable={false}
+    />
+  );
+}
+
 const ACTIONS: { id: Action; label: string; icon: ComponentType<{ className?: string }> }[] = [
-  { id: "manual", label: "Reciclar", icon: Recycle },
+  { id: "manual", label: "Reciclar", icon: RecycleGlyph },
   { id: "qrcode", label: "QR CODE", icon: QrCode },
 ];
 
@@ -283,14 +311,24 @@ export function EcobetaRecycling({
               <div className="flex flex-none items-center gap-[13px] px-[20px] pt-[26px]">
                 {view === "reciclar" ? (
                   <>
-                    {/* Avatar opens the profile menu face of this same sheet. */}
+                    {/* Avatar opens the profile menu face of this same sheet. It wears the
+                        menu glyph so the way in is legible as a menu, initials beside it. */}
                     <button
                       type="button"
                       onClick={() => setView("perfil")}
-                      aria-label="Abrir o meu perfil"
-                      className="grid h-[45px] w-[45px] flex-none place-items-center rounded-full text-[15px] font-bold transition-opacity hover:opacity-85"
+                      aria-label="Abrir o menu do meu perfil"
+                      className="flex h-[45px] flex-none items-center gap-[9px] rounded-full px-[16px] text-[15px] font-bold transition-opacity hover:opacity-85"
                       style={{ background: AVATAR_BG, color: INK }}
                     >
+                      {/* Own asset in /public, so the deployment subpath is applied by hand,
+                          the same way ECOBETA_FACE_STYLE roots its font URL. */}
+                      <img
+                        src={MENU_ICON_SRC}
+                        alt=""
+                        aria-hidden="true"
+                        className="h-[18px] w-[18px] flex-none"
+                        draggable={false}
+                      />
                       <span aria-hidden="true">{initials}</span>
                     </button>
                     <button
