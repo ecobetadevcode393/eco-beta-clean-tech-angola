@@ -2,12 +2,42 @@
 
 import { useEffect, useRef, useState, type ComponentType, type FormEvent } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { ArrowLeft, Bell, ChevronDown, ChevronRight, Loader2, QrCode } from "lucide-react";
+import { ArrowLeft, Bell, ChevronDown, ChevronRight, Loader2, MoreVertical, QrCode } from "lucide-react";
 
 import { useIsMobile } from "@/hooks/use-mobile";
+import type { EcobetaWalletStore } from "@/hooks/use-ecobeta-wallet";
 import { EcobetaNotifications, EcobetaProfileMenu } from "@/components/EcobetaProfileMenu";
+import {
+  EcobetaEcopontoAgentRoute,
+  EcobetaEcopontoCall,
+  EcobetaEcopontoDetail,
+  EcobetaEcopontoList,
+  EcobetaEcopontoMessages,
+  EcobetaEcopontoRoute,
+  EcobetaEcopontoSearch,
+} from "@/components/EcobetaEcopontos";
+import { EcobetaAddressForm, EcobetaAddressList } from "@/components/EcobetaAddress";
+import { EcobetaEditProfile, EcobetaPersonalInfo } from "@/components/EcobetaPersonalInfo";
+import {
+  EcobetaRewardsDetail,
+  EcobetaRewardsSearch,
+  EcobetaRewardsStores,
+} from "@/components/EcobetaRewards";
+import {
+  EcobetaWallet,
+  EcobetaWalletCashout as EcobetaWalletCashoutCard,
+  EcobetaWalletHistory,
+  ReceiptView,
+} from "@/components/EcobetaWallet";
 import { ECOBETA_FACE_STYLE, ECOBETA_RECYCLING_FACE_STACK } from "@/lib/ecobetaFace";
 import { MYECOBETA_IS_LOCAL, accountInitials, type MyEcobetaAccount } from "@/lib/myecobetaAuth";
+import { receiptFor, type EcobetaWalletCashout, type EcobetaWalletValues } from "@/lib/ecobetaWallet";
+import type {
+  EcobetaAddressValues,
+  EcobetaProfile,
+  EcobetaProfileAddress,
+  EcobetaProfileValues,
+} from "@/lib/ecobetaProfile";
 import {
   ECOBETA_MATERIALS,
   EcobetaRecyclingError,
@@ -20,6 +50,7 @@ import {
   type EcobetaRecyclingFieldErrors,
   type EcobetaRecyclingValues,
 } from "@/lib/ecobetaRecycling";
+import { redeemReward, rewardById, type EcobetaRewardCategoryId } from "@/lib/ecobetaRewards";
 
 /*
  * The screen the account opens onto: weigh what is going into the ecoponto and collect the
@@ -70,8 +101,123 @@ type Hint = { tone: "alerta" | "ok"; text: string };
 /** The two ways an entry can be made. */
 type Action = "manual" | "qrcode";
 
-/** The sheet borrows two faces from the Menu design: avatar opens profile, bell opens inbox. */
-type SheetView = "reciclar" | "perfil" | "notificacoes";
+/**
+ * The faces the sheet can show: the form itself, the two the Menu design reaches (profile, inbox),
+ * the four the profile menu's rows reach — the person's own data, the form that changes it, the
+ * addresses, and the form that adds or changes one of those — and the carteira digital, in the
+ * three readings the wallet design has (the wallet itself, its levantamentos, and one of them with
+ * the code the ATM reads) plus the comprovativo that code prints.
+ */
+type SheetView =
+  | "reciclar"
+  | "perfil"
+  | "notificacoes"
+  | "info-pessoal"
+  | "info-editar"
+  | "endereco"
+  | "endereco-novo"
+  | "carteira"
+  | "carteira-historico"
+  | "carteira-codigo"
+  | "comprovativo"
+  | "ecopontos"
+  | "ecopontos-busca"
+  | "ecoponto"
+  | "ecoponto-rota"
+  | "ecoponto-rota-agente"
+  | "ecoponto-chamada"
+  | "ecoponto-mensagens"
+  | "recompensas"
+  | "recompensas-busca"
+  | "recompensa";
+
+/** Every face but the form itself, which is where the deeper ones lead back to first. */
+type SheetStep = Exclude<SheetView, "reciclar">;
+
+/** One step back from each face, so the header's arrow and Escape always agree about it. */
+const BACK_TARGET: Record<SheetStep, SheetView> = {
+  perfil: "reciclar",
+  notificacoes: "reciclar",
+  "info-pessoal": "perfil",
+  "info-editar": "info-pessoal",
+  endereco: "perfil",
+  "endereco-novo": "endereco",
+  carteira: "perfil",
+  "carteira-historico": "carteira",
+  "carteira-codigo": "carteira-historico",
+  comprovativo: "carteira-codigo",
+  ecopontos: "perfil",
+  "ecopontos-busca": "ecopontos",
+  ecoponto: "ecopontos",
+  "ecoponto-rota": "ecoponto",
+  "ecoponto-rota-agente": "ecoponto-rota",
+  "ecoponto-chamada": "ecoponto-rota-agente",
+  "ecoponto-mensagens": "ecoponto-rota",
+  recompensas: "perfil",
+  "recompensas-busca": "recompensas",
+  recompensa: "recompensas",
+};
+
+/** What the header calls each face. "Info Pessoal" is the menu row that opens it. */
+const TITLES: Record<SheetStep, string> = {
+  perfil: "Meu Perfil",
+  notificacoes: "Notificações",
+  "info-pessoal": "Info Pessoal",
+  "info-editar": "Editar Perfil",
+  endereco: "Meu Endereço",
+  "endereco-novo": "Novo Endereço",
+  carteira: "Carteira Digital",
+  "carteira-historico": "Histórico de Levantamentos",
+  "carteira-codigo": "Levantamento",
+  comprovativo: "Comprovativo",
+  ecopontos: "Ecopontos",
+  "ecopontos-busca": "Procurar",
+  ecoponto: "Ecoponto",
+  "ecoponto-rota": "Caminho para FPC-ECO",
+  "ecoponto-rota-agente": "Caminho para FPC-ECO",
+  "ecoponto-chamada": "Chamada",
+  "ecoponto-mensagens": "Mensagens",
+  recompensas: "Recompensas",
+  "recompensas-busca": "Procurar",
+  recompensa: "Detalhes da Recompensa",
+};
+
+/*
+ * The two readings the header needs per face, as functions rather than as lookups: the form itself
+ * is not a step and has no place in either record, and reading them through one place is what keeps
+ * the header's arrow and Escape on the same step.
+ */
+
+function titleOf(view: SheetView): string {
+  return view === "reciclar" ? "Reciclar" : TITLES[view];
+}
+
+function backTargetOf(view: SheetView): SheetView {
+  return view === "reciclar" ? "reciclar" : BACK_TARGET[view];
+}
+
+/**
+ * The faces that draw their own chrome: the seven the profile menu's "Ecopontos" row reaches and the
+ * three its "Recompensas" row reaches. The design authors each one as a whole phone screen with its
+ * own header and back control, so the sheet hides its own header for them and hands them the full
+ * height instead of padding it.
+ */
+const OWN_CHROME_VIEWS = new Set<SheetView>([
+  "ecopontos",
+  "ecopontos-busca",
+  "ecoponto",
+  "ecoponto-rota",
+  "ecoponto-rota-agente",
+  "ecoponto-chamada",
+  "ecoponto-mensagens",
+  "recompensas",
+  "recompensas-busca",
+  "recompensa",
+]);
+
+function hasOwnChrome(view: SheetView): boolean {
+  return OWN_CHROME_VIEWS.has(view);
+}
 
 /**
  * The recycling action's glyph, served from /public instead of drawn from the icon set: it is
@@ -104,6 +250,15 @@ export type EcobetaRecyclingProps = {
   /** What the bell carries: entries registered this session; it opens the inbox face. */
   notifications: number;
   onRegister: (values: EcobetaRecyclingValues) => Promise<EcobetaRecyclingEntry>;
+  /** The carteira digital: the session's levantamentos, and the two calls that move it. */
+  wallet: EcobetaWalletStore;
+  /** The account's own data, and the three ways the profile screens write to it. */
+  profile: EcobetaProfile;
+  /** The marketplace: taking the points of a reward off the session's ledger. */
+  onRedeemPoints: (points: number) => void;
+  onSaveProfile: (values: EcobetaProfileValues) => Promise<EcobetaProfile>;
+  onSaveAddress: (values: EcobetaAddressValues, addressId?: string) => Promise<EcobetaProfileAddress>;
+  onRemoveAddress: (addressId: string) => Promise<void>;
   /** Back to the account panel, one step out. */
   onBack: () => void;
   /** Out of the overlay altogether. */
@@ -118,6 +273,12 @@ export function EcobetaRecycling({
   points,
   notifications,
   onRegister,
+  wallet,
+  profile,
+  onRedeemPoints,
+  onSaveProfile,
+  onSaveAddress,
+  onRemoveAddress,
   onBack,
   onClose,
   onSignOut,
@@ -128,6 +289,16 @@ export function EcobetaRecycling({
   const [action, setAction] = useState<Action>("manual");
   /** Which face of the sheet is showing; reset every time the sheet opens. */
   const [view, setView] = useState<SheetView>("reciclar");
+  /** The address the address form is changing; null means it is adding a new one. */
+  const [editingAddressId, setEditingAddressId] = useState<string | null>(null);
+  /** The levantamento the wallet's code face or receipt is showing; null means none is open. */
+  const [cashoutId, setCashoutId] = useState<string | null>(null);
+  /** The reward the marketplace's detail face is showing; null means the products list. */
+  const [rewardId, setRewardId] = useState<string | null>(null);
+  /** The store category the products list is showing; the menu's "Recompensas" row opens the first. */
+  const [rewardCategory, setRewardCategory] = useState<EcobetaRewardCategoryId>("padarias");
+  /** The line a save leaves on the face it lands on, cleared by the next step. */
+  const [notice, setNotice] = useState("");
   const [material, setMaterial] = useState<EcobetaMaterialId | "">("");
   const [weight, setWeight] = useState("");
   const [fieldErrors, setFieldErrors] = useState<EcobetaRecyclingFieldErrors>({});
@@ -143,6 +314,13 @@ export function EcobetaRecycling({
   const selected = materialById(material);
   const initials = accountInitials(account.name) || "EB";
   const code = accountCode(account.email);
+  /*
+   * The levantamento the wallet's code face and receipt read. It is looked up by id rather than
+   * held as an object so the frame the sheet draws always carries the wallet's latest answer — a
+   * "Pedir verificação" that comes back "expirado" is what the card then reads.
+   */
+  const activeCashout: EcobetaWalletCashout | null =
+    wallet.cashouts.find((cashout) => cashout.id === cashoutId) ?? null;
 
   // While the sheet is open the page behind it stays still: on a phone the sheet is the
   // whole screen, on desktop it is a centred 375px modal over a scrim.
@@ -155,15 +333,20 @@ export function EcobetaRecycling({
     };
   }, [open]);
 
-  // Escape goes back one step: inside profile/inbox it returns to the form, on the form it
-  // hands the screen back to the account panel rather than closing the overlay from under the user.
+  // Escape goes back one step, the same step the header's arrow takes: inside the deeper faces it
+  // returns to the face above, and on the form it hands the screen back to the account panel rather
+  // than closing the overlay from under the user.
   useEffect(() => {
     if (!open) return;
 
     function onKeyDown(event: KeyboardEvent) {
       if (event.key !== "Escape") return;
-      if (view !== "reciclar") setView("reciclar");
-      else onBack();
+      if (view !== "reciclar") {
+        setView(backTargetOf(view));
+        setNotice("");
+      } else {
+        onBack();
+      }
     }
 
     window.addEventListener("keydown", onKeyDown);
@@ -181,8 +364,66 @@ export function EcobetaRecycling({
   // it per visit, so reopening lands on the form face rather than on profile/inbox.
   function handleClose() {
     setView("reciclar");
+    setEditingAddressId(null);
+    setCashoutId(null);
+    setRewardId(null);
+    setNotice("");
     setFinalized(false);
     onClose();
+  }
+
+  /** Every step of the sheet's own navigation, with the line the last save left behind cleared. */
+  function go(next: SheetView) {
+    setView(next);
+    setNotice("");
+  }
+
+  /* ── the carteira digital's own moves ─────────────────────────────────── */
+
+  /** Asks for a levantamento, then shows the code it generated. */
+  async function requestWalletCashout(values: EcobetaWalletValues): Promise<EcobetaWalletCashout> {
+    const cashout = await wallet.request(values);
+    setCashoutId(cashout.id);
+    go("carteira-codigo");
+    return cashout;
+  }
+
+  /** Opens the code of one levantamento, from the wallet or from the history. */
+  function openCashout(id: string) {
+    setCashoutId(id);
+    go("carteira-codigo");
+  }
+
+  /** The history's "Pedir verificação": the wallet keeps the answer, which the card then reads. */
+  async function verifyWalletCashout(id: string) {
+    await wallet.verify(id);
+  }
+
+  /* ── o marketplace ─────────────────────────────────────────────────────── */
+
+  /** A recompensa que a face de detalhe está a mostrar, lida do catálogo e não de um objeto guardado. */
+  const activeReward = rewardById(rewardId);
+
+  /**
+   * Reserva uma recompensa do marketplace e tira os pontos do saldo da sessão. A face de detalhe
+   * pede a reserva; é a folha que a escreve no ledger, porque o saldo vive acima dela.
+   */
+  async function addReward(id: string, size: string, quantity: number): Promise<void> {
+    const redemption = await redeemReward({ rewardId: id, size, quantity }, { points });
+    onRedeemPoints(redemption.points);
+  }
+
+  /** Abre o detalhe de uma recompensa a partir da capa ou da procura. */
+  function openReward(id: string) {
+    setRewardId(id);
+    go("recompensa");
+  }
+
+  /** Abre a capa de outra loja parceira a partir da procura, mantendo a face de produtos. */
+  function openRewardCategory(category: EcobetaRewardCategoryId) {
+    setRewardCategory(category);
+    setRewardId(null);
+    go("recompensas");
   }
 
   function instructionFor(next: Action): Hint {
@@ -308,6 +549,7 @@ export function EcobetaRecycling({
               }
               transition={reduceMotion ? { duration: 0 } : { duration: 0.34, ease: EASE_OUT }}
             >
+              {hasOwnChrome(view) ? null : (
               <div className="flex flex-none items-center gap-[13px] px-[20px] pt-[26px]">
                 {view === "reciclar" ? (
                   <>
@@ -374,37 +616,210 @@ export function EcobetaRecycling({
                   <>
                     <button
                       type="button"
-                      onClick={() => setView("reciclar")}
-                      aria-label="Voltar para reciclar"
+                      onClick={() => go(backTargetOf(view))}
+                      aria-label={`Voltar para ${titleOf(backTargetOf(view))}`}
                       className="grid h-[45px] w-[45px] flex-none place-items-center rounded-full transition-opacity hover:opacity-85"
                       style={{ background: AVATAR_BG, color: INK }}
                     >
                       <ArrowLeft className="h-[20px] w-[20px]" aria-hidden="true" />
                     </button>
                     <p className="min-w-0 flex-1 truncate text-[17px] leading-[22px]" style={{ color: BELL_BG }}>
-                      {view === "perfil" ? "Meu Perfil" : "Notificações"}
+                      {titleOf(view)}
                     </p>
-                    <span
-                      aria-hidden="true"
-                      className="grid h-[45px] w-[45px] flex-none place-items-center rounded-full"
-                      style={{ background: AVATAR_BG, color: BELL_BG }}
-                    >
-                      <Bell className="h-[19px] w-[19px]" />
-                    </span>
+                    {/* The design puts the way into the form at the right of the reading face, in the
+                        place the bell keeps on the two faces above it. */}
+                    {view === "info-pessoal" ? (
+                      <button
+                        type="button"
+                        onClick={() => go("info-editar")}
+                        className="flex-none rounded-[10px] px-[6px] text-[14px] uppercase underline"
+                        style={{ color: BRAND_TEAL, lineHeight: "24px" }}
+                      >
+                        Editar
+                      </button>
+                    ) : view === "carteira" ? (
+                      // The three dots the wallet design keeps on the balance card, here as the
+                      // header's own way into the levantamentos they open.
+                      <button
+                        type="button"
+                        onClick={() => go("carteira-historico")}
+                        aria-label="Histórico de levantamentos"
+                        className="grid h-[45px] w-[45px] flex-none place-items-center rounded-full transition-colors hover:bg-[#ECF0F4]"
+                        style={{ background: AVATAR_BG, color: BELL_BG }}
+                      >
+                        <MoreVertical className="h-[19px] w-[19px]" aria-hidden="true" />
+                      </button>
+                    ) : view === "perfil" || view === "notificacoes" ? (
+                      <span
+                        aria-hidden="true"
+                        className="grid h-[45px] w-[45px] flex-none place-items-center rounded-full"
+                        style={{ background: AVATAR_BG, color: BELL_BG }}
+                      >
+                        <Bell className="h-[19px] w-[19px]" />
+                      </span>
+                    ) : null}
                   </>
                 )}
               </div>
+              )}
 
-              <div className="min-h-0 flex-1 overflow-y-auto px-[20px] pb-[28px]">
-                {view === "perfil" ? (
+              <div
+                className={
+                  hasOwnChrome(view)
+                    ? "min-h-0 flex-1 overflow-y-auto overflow-x-hidden"
+                    : "min-h-0 flex-1 overflow-y-auto px-[20px] pb-[28px]"
+                }
+              >
+                {view === "ecopontos" ? (
+                  <EcobetaEcopontoList
+                    onBack={() => go("perfil")}
+                    onOpenPoint={() => go("ecoponto")}
+                    onOpenSearch={() => go("ecopontos-busca")}
+                  />
+                ) : view === "ecopontos-busca" ? (
+                  <EcobetaEcopontoSearch onBack={() => go("ecopontos")} onOpenPoint={() => go("ecoponto")} />
+                ) : view === "ecoponto" ? (
+                  <EcobetaEcopontoDetail onBack={() => go("ecopontos")} onShowRoute={() => go("ecoponto-rota")} />
+                ) : view === "ecoponto-rota" ? (
+                  <EcobetaEcopontoRoute
+                    onBack={() => go("ecoponto")}
+                    onCall={() => go("ecoponto-chamada")}
+                    onMessage={() => go("ecoponto-mensagens")}
+                  />
+                ) : view === "ecoponto-rota-agente" ? (
+                  <EcobetaEcopontoAgentRoute
+                    onBack={() => go("ecoponto-rota")}
+                    onCall={() => go("ecoponto-chamada")}
+                    onMessage={() => go("ecoponto-mensagens")}
+                  />
+                ) : view === "ecoponto-chamada" ? (
+                  <EcobetaEcopontoCall onEnd={() => go("ecoponto-rota-agente")} />
+                ) : view === "ecoponto-mensagens" ? (
+                  <EcobetaEcopontoMessages onBack={() => go("ecoponto-rota")} />
+                ) : view === "recompensas" ? (
+                  <EcobetaRewardsStores
+                    points={points}
+                    category={rewardCategory}
+                    onBack={() => go("perfil")}
+                    onOpenReward={openReward}
+                    onOpenSearch={() => go("recompensas-busca")}
+                  />
+                ) : view === "recompensas-busca" ? (
+                  <EcobetaRewardsSearch
+                    onBack={() => go("recompensas")}
+                    onOpenReward={openReward}
+                    onOpenCategory={openRewardCategory}
+                  />
+                ) : view === "recompensa" ? (
+                  // Keyed per reward, so a second product remounts the detail with that product's
+                  // own size chosen rather than with the size the last one left selected.
+                  activeReward ? (
+                    <EcobetaRewardsDetail
+                      key={activeReward.id}
+                      reward={activeReward}
+                      points={points}
+                      onBack={() => go("recompensas")}
+                      onAdd={addReward}
+                    />
+                  ) : (
+                    <EcobetaRewardsStores
+                      points={points}
+                      category={rewardCategory}
+                      onBack={() => go("perfil")}
+                      onOpenReward={openReward}
+                      onOpenSearch={() => go("recompensas-busca")}
+                    />
+                  )
+                ) : view === "perfil" ? (
                   <EcobetaProfileMenu
                     account={account}
                     points={points}
-                    onBack={() => setView("reciclar")}
+                    avatarUrl={profile.avatarUrl}
+                    onBack={() => go("reciclar")}
+                    onOpen={(target) => go(target)}
                     onSignOut={onSignOut}
                   />
                 ) : view === "notificacoes" ? (
                   <EcobetaNotifications notifications={notifications} points={points} />
+                ) : view === "info-pessoal" ? (
+                  <EcobetaPersonalInfo profile={profile} points={points} notice={notice} />
+                ) : view === "info-editar" ? (
+                  <EcobetaEditProfile
+                    profile={profile}
+                    onSave={onSaveProfile}
+                    onDone={() => {
+                      setNotice("Dados do perfil atualizados.");
+                      setView("info-pessoal");
+                    }}
+                  />
+                ) : view === "endereco" ? (
+                  <EcobetaAddressList
+                    profile={profile}
+                    notice={notice}
+                    onAdd={() => {
+                      setEditingAddressId(null);
+                      go("endereco-novo");
+                    }}
+                    onEdit={(addressId) => {
+                      setEditingAddressId(addressId);
+                      go("endereco-novo");
+                    }}
+                  />
+                ) : view === "endereco-novo" ? (
+                  <EcobetaAddressForm
+                    // Keyed per address, so tapping a card remounts the form with that address's
+                    // draft rather than re-seeding a draft that is already being typed into.
+                    key={editingAddressId ?? "novo"}
+                    address={profile.addresses.find((address) => address.id === editingAddressId) ?? null}
+                    onSave={onSaveAddress}
+                    onRemove={onRemoveAddress}
+                    onDone={(text) => {
+                      setNotice(text);
+                      setView("endereco");
+                    }}
+                  />
+                ) : view === "carteira" ? (
+                  <EcobetaWallet
+                    points={points}
+                    notice={notice}
+                    onRequest={requestWalletCashout}
+                    onOpenHistory={() => go("carteira-historico")}
+                  />
+                ) : view === "carteira-historico" ? (
+                  <EcobetaWalletHistory
+                    cashouts={wallet.cashouts}
+                    points={points}
+                    onOpen={openCashout}
+                    onVerify={verifyWalletCashout}
+                  />
+                ) : view === "carteira-codigo" || view === "comprovativo" ? (
+                  activeCashout ? (
+                    view === "comprovativo" ? (
+                      // Keyed per levantamento, so a second receipt re-seeds its copied/printing
+                      // state rather than reading as the previous one's.
+                      <ReceiptView
+                        key={activeCashout.id}
+                        receipt={receiptFor(activeCashout)}
+                        onBack={() => go("carteira-codigo")}
+                        onRefresh={() => {}}
+                      />
+                    ) : (
+                      <EcobetaWalletCashoutCard
+                        key={activeCashout.id}
+                        cashout={activeCashout}
+                        pending={false}
+                        onVerify={async () => {
+                          await verifyWalletCashout(activeCashout.id);
+                        }}
+                        onReceipt={() => go("comprovativo")}
+                      />
+                    )
+                  ) : (
+                    <p className="mt-[28px] text-[13px] leading-[1.5]" style={{ color: MUTED }}>
+                      Este levantamento já não está no saldo desta sessão. Volte à carteira para gerar
+                      um novo código.
+                    </p>
+                  )
                 ) : (
                   <>
                     <p className="mt-[28px] text-[16px] capitalize" style={{ color: INK_SOFT }}>

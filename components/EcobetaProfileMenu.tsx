@@ -1,6 +1,10 @@
 /**
  * Profile menu + inbox for the recycling sheet (the Menu design).
  * Avatar opens profile, bell opens inbox. Same 375px sheet.
+ *
+ * Two of its rows lead to a screen of their own — "Info Pessoal" to the person's own data and
+ * "Endereço" to the addresses — so those carry a `target` and are handed to `onOpen`. The rows
+ * still without a screen behind them go back to the form, which is what they did before.
  */
 
 "use client";
@@ -10,7 +14,8 @@ import { CircleHelp, MessageSquareText, ShieldCheck, UserRound, Wallet } from "l
 
 import type { MyEcobetaAccount } from "@/lib/myecobetaAuth";
 import { accountInitials } from "@/lib/myecobetaAuth";
-import { formatPoints } from "@/lib/ecobetaRecycling";
+import { formatPoints, tierFor } from "@/lib/ecobetaRecycling";
+
 
 const INK = "#32343E";
 const MUTED = "#676767";
@@ -21,28 +26,52 @@ const ICON_BG = "#FFFFFF";
 const DANGER = "#FB4A59";
 const CHEVRON = "#747783";
 
+/** The rows that lead to a screen of their own, as the sheet names them. */
+export type EcobetaProfileMenuTarget =
+  | "info-pessoal"
+  | "endereco"
+  | "carteira"
+  | "ecopontos"
+  | "recompensas";
+
 export type EcobetaProfileMenuProps = {
   account: MyEcobetaAccount;
   points: number;
+  /** The photograph the profile carries, when it has one; the initials stand in when it does not. */
+  avatarUrl?: string;
   onBack: () => void;
+  onOpen: (target: EcobetaProfileMenuTarget) => void;
   onSignOut: () => void;
 };
 
-type MenuRow = { icon: typeof UserRound; color: string; label: string };
+type MenuRow = {
+  icon: typeof UserRound;
+  color: string;
+  label: string;
+  /** Set on the rows that open a screen; the rest are still design. */
+  target?: EcobetaProfileMenuTarget;
+};
 
-export function EcobetaProfileMenu({ account, points, onBack, onSignOut }: EcobetaProfileMenuProps) {
+export function EcobetaProfileMenu({
+  account,
+  points,
+  avatarUrl,
+  onBack,
+  onOpen,
+  onSignOut,
+}: EcobetaProfileMenuProps) {
   const initials = accountInitials(account.name);
-  const tier = points >= 5000 ? "ECO OURO" : points >= 1000 ? "ECO PRATA" : "ECO VERDE";
+  const tier = tierFor(points);
   const groups: MenuRow[][] = [
     [
-      { icon: UserRound, color: "#FB6F3D", label: "Info Pessoal" },
-      { icon: MapPin, color: "#413DFB", label: "Endereço" },
+      { icon: UserRound, color: "#FB6F3D", label: "Info Pessoal", target: "info-pessoal" },
+      { icon: MapPin, color: "#413DFB", label: "Endereço", target: "endereco" },
     ],
     [
-      { icon: Wallet, color: "#369BFF", label: "Carteira Digital" },
-      { icon: Gift, color: "#B33DFB", label: "Ecopontos" },
+      { icon: Wallet, color: "#369BFF", label: "Carteira Digital", target: "carteira" },
+      { icon: Gift, color: "#B33DFB", label: "Ecopontos", target: "ecopontos" },
       { icon: Bell, color: "#FFAA2A", label: "Notificações" },
-      { icon: Gift, color: "#369BFF", label: "Recompensas" },
+      { icon: Gift, color: "#369BFF", label: "Recompensas", target: "recompensas" },
     ],
   ];
 
@@ -57,10 +86,14 @@ export function EcobetaProfileMenu({ account, points, onBack, onSignOut }: Ecobe
       <div className="flex items-center gap-[12px]">
         <span
           aria-hidden="true"
-          className="grid h-[100px] w-[100px] flex-none place-items-center rounded-full text-[30px] font-bold text-white"
+          className="grid h-[100px] w-[100px] flex-none place-items-center overflow-hidden rounded-full text-[30px] font-bold text-white"
           style={{ background: BRAND_TEAL }}
         >
-          {initials || "E"}
+          {avatarUrl ? (
+            <img src={avatarUrl} alt="" className="h-full w-full object-cover" draggable={false} />
+          ) : (
+            initials || "E"
+          )}
         </span>
         <span className="min-w-0">
           <span className="block truncate text-[20px] font-bold capitalize" style={{ color: INK }}>
@@ -83,7 +116,7 @@ export function EcobetaProfileMenu({ account, points, onBack, onSignOut }: Ecobe
               <button
                 key={row.label}
                 type="button"
-                onClick={onBack}
+                onClick={() => (row.target ? onOpen(row.target) : onBack())}
                 className="flex w-full items-center gap-[12px] rounded-[12px] px-[12px] py-[12px] text-left transition-colors hover:bg-white"
               >
                 <span aria-hidden="true" className="grid h-[40px] w-[40px] flex-none place-items-center rounded-full" style={{ background: ICON_BG }}>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { ArrowRight, Eye, EyeOff, Loader2, X } from "lucide-react";
 
@@ -18,6 +18,8 @@ import {
 import { ECOBETA_FACE_STACK, ECOBETA_FACE_STYLE } from "@/lib/ecobetaFace";
 import { EcobetaRecycling } from "@/components/EcobetaRecycling";
 import { useEcobetaRecycling } from "@/hooks/use-ecobeta-recycling";
+import { useEcobetaWallet } from "@/hooks/use-ecobeta-wallet";
+import { useEcobetaProfile } from "@/hooks/use-ecobeta-profile";
 
 /*
  * The account screen for the hero's myEcobetaApp pill.
@@ -29,9 +31,10 @@ import { useEcobetaRecycling } from "@/hooks/use-ecobeta-recycling";
  * the forms and their state in React and the page free of app chrome.
  *
  * It owns two screens, because they are two halves of one session: the form, and — once there
- * is an account — the recycling sheet where the points are earned. The session, the face and the
- * ledger live outside both of them (`lib/ecobetaFace`, `hooks/use-ecobeta-recycling`) so neither
- * screen has to know how the other is drawn.
+ * is an account — the recycling sheet where the points are earned. The session, the face, the
+ * ledger, the profile and the wallet live outside both of them (`lib/ecobetaFace`,
+ * `hooks/use-ecobeta-recycling`, `hooks/use-ecobeta-profile`, `hooks/use-ecobeta-wallet`) so
+ * neither screen has to know how the other is drawn.
  */
 
 /** The hero's palette, so the overlay and the page read as the same material. */
@@ -63,6 +66,28 @@ export function MyEcobetaAuth() {
    */
   const [screen, setScreen] = useState<MyEcobetaScreen>("entrar");
   const recycling = useEcobetaRecycling();
+  /**
+   * The carteira digital, built on the same ledger the points come from: a levantamento takes its
+   * points out of `recycling` as soon as it has a code, and the sheet only reads them and hands
+   * over new ones.
+   */
+  const wallet = useEcobetaWallet({
+    points: recycling.points,
+    entries: recycling.entries,
+    onRedeem: recycling.redeem,
+  });
+  const { profile, saveProfile, saveAddress, removeAddress } = useEcobetaProfile(account);
+  /**
+   * The account as the screens show it. The profile's name wins where it has one, because that is
+   * the one the person can change from inside the sheet. Memoised on the name rather than on the
+   * object, so the sign-in form — which re-focuses its first field when the account changes — is
+   * not handed a new account on every render.
+   */
+  const displayName = profile.name || account?.name || "";
+  const shownAccount = useMemo(
+    () => (account ? { ...account, name: displayName } : null),
+    [account, displayName],
+  );
 
   useEffect(() => {
     function onMessage(event: MessageEvent) {
@@ -90,7 +115,7 @@ export function MyEcobetaAuth() {
       <MyEcobetaDialog
         key={visit}
         open={open && screen === "entrar"}
-        account={account}
+        account={shownAccount}
         // Signing in opens the recycling sheet; signing out closes it again.
         onAccount={(next) => {
           setAccount(next);
@@ -103,10 +128,16 @@ export function MyEcobetaAuth() {
         <EcobetaRecycling
           key={`reciclar-${visit}`}
           open={open && screen === "reciclar"}
-          account={account}
+          account={shownAccount ?? account}
           points={recycling.points}
           notifications={recycling.entries.length}
           onRegister={recycling.register}
+          wallet={wallet}
+          profile={profile}
+          onRedeemPoints={recycling.redeem}
+          onSaveProfile={saveProfile}
+          onSaveAddress={saveAddress}
+          onRemoveAddress={removeAddress}
           onBack={() => setScreen("entrar")}
           onClose={() => setOpen(false)}
           onSignOut={() => {

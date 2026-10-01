@@ -149,6 +149,23 @@ export function formatWeight(weightKg: number): string {
   return weightKg.toFixed(2).replace(".", ",");
 }
 
+/* ── the tier a balance buys ──────────────────────────────────────────── */
+
+/**
+ * The rungs the balance climbs, highest first, and the one place the thresholds are written: the
+ * line under the person's name on the profile menu and the one on the profile card must not
+ * disagree about which tier the same balance is.
+ */
+const TIERS: readonly { minimum: number; label: string }[] = [
+  { minimum: 5000, label: "ECO OURO" },
+  { minimum: 1000, label: "ECO PRATA" },
+  { minimum: 0, label: "ECO VERDE" },
+];
+
+export function tierFor(points: number): string {
+  return TIERS.find((tier) => points >= tier.minimum)?.label ?? TIERS[TIERS.length - 1].label;
+}
+
 /**
  * The code the ecoponto reads for this account. Derived from the address so it is the same on
  * every visit without a directory to ask, and short enough to be read out loud when a scan is

@@ -36,7 +36,17 @@ Abra `http://localhost:3000`.
 - `app/` → rotas do App Router (`layout.tsx`, `page.tsx`, `globals.css`)
 - `components/Scene.tsx` → liga a página ao `SylvaHero`
 - `components/MyEcobetaAuth.tsx` → ecrã de conta (entrar / criar conta) sobre a cena
+- `components/EcobetaRecycling.tsx` → a folha de reciclagem e todas as suas faces
+- `components/EcobetaProfileMenu.tsx` → menu do perfil e caixa de notificações
+- `components/EcobetaPersonalInfo.tsx` → os dados do perfil: leitura e formulário
+- `components/EcobetaAddress.tsx` → os endereços: lista e formulário
+- `components/EcobetaRewards.tsx` → o marketplace verde: produtos, detalhe e procura
 - `lib/myecobetaAuth.ts` → validação da conta e o seam para o serviço real
+- `lib/ecobetaRecycling.ts` → materiais, pontos, escalões e o seam do serviço
+- `lib/ecobetaProfile.ts` → perfil, endereços, validação e o seam do serviço
+- `lib/ecobetaRewards.ts` → lojas parceiras, catálogo de recompensas e o seam do serviço
+- `hooks/use-ecobeta-recycling.ts` → o saldo da sessão
+- `hooks/use-ecobeta-profile.ts` → o perfil da sessão
 - `src/shaders/` → pacote de cenas e landing pages (`threeui`)
   - `sylva-living-world/` → o mundo *Living Green* e as variantes derivadas
   - `landing-pages/` → moldura isolada, tipografia e catálogo de páginas autorais
@@ -48,6 +58,27 @@ Abra `http://localhost:3000`.
 O dock do header autoral tem uma pílula `myEcobetaApp` que abre o ecrã de **entrar** e **criar conta**. A pílula vive dentro da moldura isolada: não pode desenhar o ecrã nem navegar a janela de topo (a sandbox não inclui `allow-top-navigation`), por isso limita-se a enviar `postMessage` com `myecobetaapp:open`, e o componente `components/MyEcobetaAuth.tsx` — montado em `app/page.tsx`, por cima do frame — responde com o ecrã.
 
 O ecrã funciona sem servidor: valida os campos em `lib/myecobetaAuth.ts` e mantém a sessão apenas em memória, o que é o que o deploy em GitHub Pages faz hoje. Para ligar o serviço real basta definir `NEXT_PUBLIC_MYECOBETA_API_URL`: o mesmo formulário passa a fazer `POST` para `<URL>/sign-in` e `<URL>/sign-up` com `credentials: "include"`, e uma resposta `{ message, fieldErrors }` volta diretamente ao formulário.
+
+## Folha de reciclagem, perfil e endereços
+
+Depois de entrar, o ecrã de conta dá lugar à *folha* de reciclagem — 375 × 812 px centrada num desktop, ecrã inteiro num telefone. É onde os pontos se ganham e onde o menu do perfil vive, e todas as faces que o menu abre são faces da mesma folha, com o cabeçalho da folha a fazer de cabeçalho de todas elas.
+
+As duas linhas do menu que já têm ecrã próprio abrem-no dentro da folha (`components/EcobetaRecycling.tsx` decide qual das faces está à vista):
+
+- **Info Pessoal** → `components/EcobetaPersonalInfo.tsx` mostra o nome completo, o NIF e o número de telefone, com a linha **EDITAR** no cabeçalho a abrir o formulário que os escreve — e que também escolhe a fotografia de perfil (lida como data URL, guardada só na sessão).
+- **Endereço** → `components/EcobetaAddress.tsx` lista os endereços guardados; tocar num cartão abre esse endereço no formulário para o alterar ou remover, e **ADICIONAR NOVO ENDEREÇO** abre o mesmo formulário vazio, com os chips CASA / SERVIÇO / OUTRO. O bloco do mapa é desenhado, porque este build não fala com nenhum serviço de tiles: a pílula sobre ele é que diz o que o browser respondeu quando lhe foi pedida a posição, e a posição só é pedida quando a pílula é tocada.
+
+## Marketplace verde
+
+A linha **Recompensas** do menu do perfil abre o marketplace verde, dentro da mesma folha (`components/EcobetaRewards.tsx`, com as regras e o seam do serviço em `lib/ecobetaRewards.ts`). São três ecrãs, todos desenhados como ecrãs de telefone inteiros com o seu próprio cabeçalho — por isso a folha esconde o cabeçalho deles e lhes dá a altura toda, tal como faz com os ecrãs dos Ecopontos:
+
+- **Produtos** → a capa de uma loja parceira (padarias, roupas ou mercados): os cartões com o preço em pontos, a nota e a entrega, a calha "Entrega Disponível" e o saldo da sessão em baixo. Tocar num cartão abre o detalhe; a lupa e **Ver Todos** levam à procura.
+- **Detalhe** → a recompensa em grande, a pílula da loja, os chips de tamanho, a linha **contêm** com os ingredientes e o bloco do carrinho com a quantidade e **Adicionar ao carrinho**. O preço mostrado é o total — o da unidade vezes a quantidade — e é esse total que sai do saldo.
+- **Procura** → o campo do desenho, as pesquisas recentes em pílula, a sugestão de lojas com as suas notas e o ranking do dia. Uma loja ou uma pesquisa recente abre a capa da sua categoria; um resultado abre o detalhe.
+
+Trocar uma recompensa tira os pontos do saldo: a face de detalhe pede a reserva, a folha escreve-a em `redeemReward` (`lib/ecobetaRewards.ts`) e é ela que chama `onRedeemPoints` no ledger da sessão (`hooks/use-ecobeta-recycling.ts`), por isso nenhum ecrã do marketplace mexe no saldo por si. As regras correm sempre, com ou sem serviço: uma recompensa esgotada, um tamanho que o produto não tem, mais unidades do que o teto ou um saldo que não chega para o total são recusados antes de escrever seja o que for, e a recusa aparece na linha do botão — que só se desliga no que não é decisão da pessoa (esgotado, ou a reserva a caminho). Sem `NEXT_PUBLIC_MYECOBETA_API_URL` a reserva é montada localmente e fica só nesta sessão; com o serviço definido a mesma face faz `POST <URL>/rewards` e a resposta dele é a que fica.
+
+O perfil vive acima da folha, ao lado da conta a que pertence (`hooks/use-ecobeta-profile.ts`), tal como o saldo vive em `hooks/use-ecobeta-recycling.ts`: as regras e o seam do serviço estão em `lib/ecobetaProfile.ts`, e sem `NEXT_PUBLIC_MYECOBETA_API_URL` o perfil começa com o nome da conta e tudo o resto por preencher, ficando o que for escrito só nesta sessão. Com o serviço definido, o mesmo ecrã lê `GET <URL>/profile` e escreve `PATCH <URL>/profile`, `POST` / `PATCH <URL>/profile/addresses` e `DELETE <URL>/profile/addresses/:id`.
 
 ## Variáveis de ambiente
 

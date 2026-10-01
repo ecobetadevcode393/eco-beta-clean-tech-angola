@@ -26,6 +26,12 @@ export type EcobetaRecyclingLedger = {
   points: number;
   entries: EcobetaRecyclingEntry[];
   register: (values: EcobetaRecyclingValues) => Promise<EcobetaRecyclingEntry>;
+  /**
+   * Takes points out of the balance, which is what the wallet's levantamentos spend. It is a
+   * debit rather than a negative entry because nothing was weighed: the entry the ecoponto
+   * credited keeps its own weight and rate, and the balance is what the two add up to.
+   */
+  redeem: (points: number) => void;
 };
 
 export function useEcobetaRecycling(): EcobetaRecyclingLedger {
@@ -42,5 +48,12 @@ export function useEcobetaRecycling(): EcobetaRecyclingLedger {
     return result.entry;
   }, []);
 
-  return { points, entries, register };
+  const redeem = React.useCallback((spent: number) => {
+    // Floored at zero rather than allowed to go negative: what the wallet may spend is validated
+    // against this balance before it is spent, and a negative balance would be a bug reading as a
+    // debt the person does not have.
+    setPoints((current) => Math.max(0, Math.round((current - spent) * 100) / 100));
+  }, []);
+
+  return { points, entries, register, redeem };
 }
